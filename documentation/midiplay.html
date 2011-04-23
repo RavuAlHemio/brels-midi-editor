@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>MidiPlay function</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; }</style>
+</head>
+<body>
+<h2>MidiPlay</h2>
+<pre>BOOL WINAPI MidiPlay
+(
+	HANDLE hSequence
+);</pre>
+<p>This function makes a sequence to play.</p>
+<h3>Parameters</h3>
+<ul>
+<li><strong>hSequence</strong>: handle of the sequence to play.</li>
+</ul>
+<h3>Return values</h3>
+<p><code>TRUE</code> if the sequence started to play or <code>FALSE</code> if not. The most likely reason for an error is an invalid handle.</p>
+<h3>Remarks</h3>
+<p>The sequence must have been opened with <a href="midiopen.html">MidiOpen</a> or created with <a href="midicreate.html">MidiCreate</a> before to be played. Use <a href="midipause.html">MidiPause</a> and <a href="midistop.html">MidiStop</a> to control playback. Use <a href="midiset.html">MidiSet</a> with <code>MIDI_LOOP</code> to make the sequence to loop.</p>
+<h3>Example</h3>
+<pre>HANDLE Sequence;
+
+// Open the sequence
+MidiOpen("test1.mid", DEFAULT_DEVICE, &Sequence);
+
+// Turn looping on
+MidiSet(Sequence, MIDI_LOOP, TRUE);
+
+// Play the sequence
+MidiPlay(Sequence);</pre>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

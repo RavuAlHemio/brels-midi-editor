@@ -1,0 +1,104 @@
+<html>
+<head>
+	<title>MidiFilterTrackEvents function</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; } table td { border-style: double; border-width: 3px; }</style>
+</head>
+<body>
+<h2>MidiFilterTrackEvents</h2>
+<pre>DWORD WINAPI MidiFilterTrackEvents
+(
+	HANDLE hSequence, 
+	WORD wTrack, 
+	QWORD qwFirst, 
+	QWORD qwLast, 
+	DWORD dwFormat, 
+	QWORD qwFilter, 
+	LPBRELS_FILTERED_EVENT* lpFilteredEvents
+);</pre>
+<p>This function gets a range of events of the specified type from a track.</p>
+<h3>Parameters</h3>
+<ul>
+<li><strong>hSequence</strong>: handle of the sequence from where the events will be copied.</li>
+<li><strong>wTrack</strong>: index of the track from where the events will be copied.</li>
+<li><strong>qwFirst</strong>: first value of the event range to copy.</li>
+<li><strong>qwLast</strong>: last value of the event range to copy.</li>
+<li><strong>dwFormat</strong>: format of the range. Use <code>MIDI_INDEX</code> for event positions or <code>MIDI_TICKS</code> for tick positions.</li>
+<li><strong>qwFilter</strong>: types of events to get. See Remarks below.</li>
+<li><strong>lpFilteredEvents</strong>: address of a <a href="brels_filtered_event.html">BRELS_FILTERED_EVENT</a> pointer which will contain the retrieved events.</li>
+</ul>
+<h3>Return values</h3>
+<p>Returns the number of retrieved events or zero if none is available or an error occurred. The reasons for an error are an invalid sequence handle, an invalid track index, an invalid event range or event type.</p>
+<h3>Remarks</h3>
+<p>You can use an apropriate combination of the following values in the parameter <em>qwFilter</em>:</p>
+<table>
+<tr><td><strong>Constant</strong></td><td><strong>Event</strong></td></tr>
+<tr><td> FILTER_SEQUENCENUMBER      </td><td>Retrieves sequence number (0x00) events</td></tr>
+<tr><td> FILTER_TEXT                </td><td>Retrieves generic text (0x01) events</td></tr>
+<tr><td> FILTER_COPYRIGHT           </td><td>Retrieves copyright (0x02)</td></tr>
+<tr><td> FILTER_TRACKNAME           </td><td>Retrieves track name (0x03) events</td></tr>
+<tr><td> FILTER_INSTRUMENTNAME      </td><td>Retrieves instrument name (0x04) events</td></tr>
+<tr><td> FILTER_LYRIC               </td><td>Retrieves lyrics (0x05) events</td></tr>
+<tr><td> FILTER_MARKER              </td><td>Retrieves marker (0x06) events</td></tr>
+<tr><td> FILTER_CUEPOINT            </td><td>Retrieves cue point (0x07) events</td></tr>
+<tr><td> FILTER_CHANNELPREFIX       </td><td>Retrieves channel prefix (0x20) events</td></tr>
+<tr><td> FILTER_ENDOFTRACK          </td><td>Retrieves end-of-track (0x2F) events</td></tr>
+<tr><td> FILTER_TEMPO               </td><td>Retrieves tempo change (0x51) events</td></tr>
+<tr><td> FILTER_SMPTEOFFSET         </td><td>Retrieves SMPTE offset (0x54) events</td></tr>
+<tr><td> FILTER_TIMESIGNATURE       </td><td>Retrieves time signature (0x58) events</td></tr>
+<tr><td> FILTER_KEYSIGNATURE        </td><td>Retrieves key signature (0x59) events</td></tr>
+<tr><td> FILTER_SEQUENCERSPECIFIC   </td><td>Retrieves sequencer specific (0x7F) events</td></tr>
+<tr><td> FILTER_SYSTEMEXCLUSIVE     </td><td>Retrieves system exclusive (0xF0) events</td></tr>
+<tr><td> FILTER_NOTEOFF             </td><td>Retrieves note off (0x8<em>n</em>) events</td></tr>
+<tr><td> FILTER_NOTEON              </td><td>Retrieves note on (0x9<em>n</em>) events</td></tr>
+<tr><td> FILTER_KEYAFTERTOUCH       </td><td>Retrieves key-aftertouch (0xA<em>n</em>) events</td></tr>
+<tr><td> FILTER_CONTROLLER          </td><td>Retrieves controller setting (0xB<em>n</em>) events</td></tr>
+<tr><td> FILTER_PROGRAM             </td><td>Retrieves program change (0xC<em>n</em>) events</td></tr>
+<tr><td> FILTER_CHANNELPRESSURE     </td><td>Retrieves channel pressure (0xD<em>n</em>) events</td></tr>
+<tr><td> FILTER_PITCHWHEEL          </td><td>Retrieves pitch change (0xE<em>n</em>) events</td></tr>
+<tr><td> FILTER_MTCQUARTERFRAME     </td><td>Retrieves MTC Quarter Frame (0xF1) events</td></tr>
+<tr><td> FILTER_SONGPOSITIONPOINTER </td><td>Retrieves Song Position Pointer (0xF2) events</td></tr>
+<tr><td> FILTER_SONGSELECT          </td><td>Retrieves Song Select (0xF3) events</td></tr>
+<tr><td> FILTER_TUNEREQUEST         </td><td>Retrieves Tune Request (0xF6) events</td></tr>
+<tr><td> FILTER_MIDICLOCK           </td><td>Retrieves Midi Clock (0xF8) events</td></tr>
+<tr><td> FILTER_MIDISTART           </td><td>Retrieves Midi Start (0xFA) events</td></tr>
+<tr><td> FILTER_MIDICONTINUE        </td><td>Retrieves Midi Continue (0xFB) events</td></tr>
+<tr><td> FILTER_MIDISTOP            </td><td>Retrieves Midi Stop (0xFC) events</td></tr>
+<tr><td> FILTER_ACTIVESENSE         </td><td>Retrieves Active sense (0xFE) events</td></tr>
+<tr><td colspan="2"><strong>The following filters are special:</strong></td></tr>
+<tr><td> FILTER_NOTES               </td><td>Retrieves notes. Each note is stored in an element of the BRELS_FILTERED_EVENT array. The index of each note on event is stored in the <em>qwStart</em> member of the structure. The index of each note off is stored in the <em>qwEnd</em> member of the structure. When the note off event is out of the searched interval, the <em>qwEnd</em> index points to the end-of-track (<code>0x2F</code>) event</td></tr>
+<tr><td> FILTER_OTHER               </td><td>Retrieves events not listed here.</td></tr>
+<tr><td> FILTER_ALL                 </td><td>Retrieves all events.</td></tr>
+</table>
+<p>You do not retrieve the events themselves, but their indexes. You can use functions like <a href="midieventget.html">MidiEventGet</a> to read the event data or call <a href="midigettrackevents.html">MidiGetTrackEvents</a> to retrieve the actual data.</p>
+<p>The function allocates the <em>lpFilteredEvents</em> events array. After you have finished with it, call <a href="midifreebuffer.html">MidiFreeBuffer</a> to deallocate it.</p>
+<p>The following example counts how many notes a track has:</p>
+<h3>Example</h3>
+<pre>void NoteCount(HANDLE Sequence, WORD wTrack)
+{
+	int nFilters, nEvents;
+	LPBRELS_FILTERED_EVENT lpFilter;
+	char temp[256];
+
+	// Event count
+	nEvents = MidiTrackGet(Sequence, wTrack, EVENT_COUNT);
+
+	// Retrieves notes and filters count
+	nFilters = MidiFilterTrackEvents(Sequence, wTrack, 0, nEvents-1, MIDI_INDEX, FILTER_NOTES, &lpFilter);
+
+	// Releases the allocated array
+	MidiFreeBuffer(lpFilter);
+
+	// Shows the count
+	itoa(nFilters, (char*) &temp, 10);
+	MessageBox(NULL, (char*) &temp, "Note count", MB_OK);
+};</pre>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

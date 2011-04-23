@@ -1,0 +1,130 @@
+Velocity
+Channel pitch
+Bank Select (coarse)
+Modulation Wheel (coarse)
+Breath controller (coarse)
+Controller #3
+Foot Pedal (coarse)
+Portamento Time (coarse)
+Data Entry (coarse)
+Volume (coarse)
+Balance (coarse)
+Controller #9
+Pan (stereo) position (coarse)
+Expression (coarse)
+Effect Control 1 (coarse)
+Effect Control 2 (coarse)
+Controller #14
+Controller #15
+General Purpose Slider 1
+General Purpose Slider 2
+General Purpose Slider 3
+General Purpose Slider 4
+Controller #20
+Controller #21
+Controller #22
+Controller #23
+Controller #24
+Controller #25
+Controller #26
+Controller #27
+Controller #28
+Controller #29
+Controller #30
+Controller #31
+Bank Select (fine)
+Modulation Wheel (fine)
+Breath controller (fine)
+Controller #35
+Foot Pedal (fine)
+Portamento Time (fine)
+Data Entry (fine)
+Volume (fine)
+Balance (fine)
+Controller #41
+Pan (stereo) position (fine)
+Expression (fine)
+Effect Control 1 (fine)
+Effect Control 2 (fine)
+Controller #46
+Controller #47
+Controller #48
+Controller #49
+Controller #50
+Controller #51
+Controller #52
+Controller #53
+Controller #54
+Controller #55
+Controller #56
+Controller #57
+Controller #58
+Controller #59
+Controller #60
+Controller #61
+Controller #62
+Controller #63
+Hold Pedal (on/off)
+Portamento (on/off)
+Sostenuto Pedal (on/off)
+Soft Pedal (on/off)
+Legato Pedal (on/off)
+Hold 2 Pedal (on/off)
+Sound Variation
+Sound Timbre
+Sound Release Time
+Sound Attack Time
+Sound Brightness
+Sound Control 6
+Sound Control 7
+Sound Control 8
+Sound Control 9
+Sound Control 10
+General Purpose Button 1 (on/off)
+General Purpose Button 2 (on/off)
+General Purpose Button 3 (on/off)
+General Purpose Button 4 (on/off)
+Controller #84
+Controller #85
+Controller #86
+Controller #87
+Controller #88
+Controller #89
+Controller #90
+Effects Level
+Tremulo Level
+Chorus Level
+Celeste Level
+Phaser Level
+Data Button increment
+Data Button decrement
+Non-registered Parameter (coarse)
+Non-registered Parameter (fine)
+Registered Parameter (coarse)
+Registered Parameter (fine)
+Controller #102
+Controller #103
+Controller #104
+Controller #105
+Controller #106
+Controller #107
+Controller #108
+Controller #109
+Controller #110
+Controller #111
+Controller #112
+Controller #113
+Controller #114
+Controller #115
+Controller #116
+Controller #117
+Controller #118
+Controller #119
+All Sound Off
+All Controllers Off
+Local Keyboard (on/off)
+All Notes Off
+Omni Mode Off
+Omni Mode On
+Mono Operation
+Poly Operation

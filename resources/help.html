@@ -1,0 +1,281 @@
+<html>
+<head>
+	<title>Help for the BRELS MIDI Editor v0.05</title>
+	<style type="text/css">* { text-decoration: none; border-style: none; }</style>
+</head>
+<body>
+<h2>Contents</h2>
+<ul>
+<li><a href="help.html#about">About this tool</a></li>
+<li><a href="help.html#botoes">Command buttons</a></li>
+<li><a href="help.html#janela">Application window</a></li>
+<li><a href="help.html#mouse">Mouse</a></li>
+<li><a href="help.html#teclado">Keyboard</a></li>
+<li><a href="help.html#mais">Further information</a></li>
+</ul>
+<a name="about"></a>
+<h2>About this tool</h2>
+<p>The BRELS MIDI Editor is a sample application for the BRELS MIDI API. However, it is a fully functional tool to create and modify MIDI files. It is open-source and free for use. You can find  more information about the editor, the API and other applications in the <a href="http://www27.brinkster.com/brels/">BRELS website</a>.</p>
+<p>The BRELS MIDI Editor is part of the BRELS MIDI API and <strong>both cannot be used for commercial purposes without an explicit, written authorization</strong> from <em>Breno de Lima Sarmento</em>, except in other <strong>open-source</strong> applications.</p>
+<a name="botoes"></a>
+<h2>Command buttons</h2>
+<h3>Quick search</h3>
+<p>
+	<a href="help.html#novo"><img src="novo.ico"/></a>
+	<a href="help.html#abrir"><img src="abrir.ico"/></a>
+	<a href="help.html#salvar"><img src="salvar.ico"/></a>
+	<a href="help.html#salvarcomo"><img src="salvarcomo.ico"/></a>
+	<a href="help.html#filtrar"><img src="filtrar.ico"/></a>
+	<a href="help.html#tocar"><img src="tocar.ico"/></a>
+	<a href="help.html#inicio"><img src="inicio.ico"/></a>
+	<a href="help.html#pausar"><img src="pausar.ico"/></a>
+	<a href="help.html#fim"><img src="fim.ico"/></a>
+	<a href="help.html#parar"><img src="parar.ico"/></a>
+	<a href="help.html#muda"><img src="muda.ico"/></a>
+	<a href="help.html#solo"><img src="solo.ico"/></a>
+	<a href="help.html#loop"><img src="loop.ico"/></a>
+	<a href="help.html#inserirtrilha"><img src="inserirtrilha.ico"/></a>
+	<a href="help.html#removertrilha"><img src="removertrilha.ico"/></a>
+	<a href="help.html#copyright"><img src="copyright.ico"/></a>
+	<a href="help.html#nomedatrilha"><img src="nomedatrilha.ico"/></a>
+	<a href="help.html#numerodatrilha"><img src="numerodatrilha.ico"/></a>
+	<a href="help.html#nomedoinstrumento"><img src="nomedoinstrumento.ico"/></a>
+	<a href="help.html#ajuda"><img src="ajuda.ico"/></a>
+	<a href="help.html#sobre"><img src="sobre.ico"/></a>
+	<a href="help.html#api"><img src="api.ico"/></a>
+	<br/>
+	<a href="help.html#cortar"><img src="cortar.ico"/></a>
+	<a href="help.html#copiar"><img src="copiar.ico"/></a>
+	<a href="help.html#colar"><img src="colar.ico"/></a>
+	<a href="help.html#apagar"><img src="apagar.ico"/></a>
+	<a href="help.html#selecionartudo"><img src="selecionartudo.ico"/></a>
+	<a href="help.html#transpor_acima"><img src="transpor_acima.ico"/></a>
+	<a href="help.html#transpor_abaixo"><img src="transpor_abaixo.ico"/></a>
+	<a href="help.html#oitava_acima"><img src="oitava_acima.ico"/></a>
+	<a href="help.html#oitava_abaixo"><img src="oitava_abaixo.ico"/></a>
+	<a href="help.html#selecionar"><img src="selecionar.ico"/></a>
+	<a href="help.html#breve"><img src="breve.ico"/></a>
+	<a href="help.html#semibreve"><img src="semibreve.ico"/></a>
+	<a href="help.html#minima"><img src="minima.ico"/></a>
+	<a href="help.html#seminima"><img src="seminima.ico"/></a>
+	<a href="help.html#colcheia"><img src="colcheia.ico"/></a>
+	<a href="help.html#semicolcheia"><img src="semicolcheia.ico"/></a>
+	<a href="help.html#fusa"><img src="fusa.ico"/></a>
+	<a href="help.html#semifusa"><img src="semifusa.ico"/></a>
+	<a href="help.html#instrumento"><img src="instrumento.ico"/></a>
+	<a href="help.html#andamento"><img src="andamento.ico"/></a>
+	<a href="help.html#texto"><img src="texto.ico"/></a>
+	<a href="help.html#letra"><img src="letra.ico"/></a>
+	<a href="help.html#marcador"><img src="marcador.ico"/></a>
+	<a href="help.html#pontodedica"><img src="pontodedica.ico"/></a>
+	<a href="help.html#desconhecido"><img src="desconhecido.ico"/></a>
+</p>
+<a name="novo"></a>
+<h3>New (<img src="novo.ico"/>)</h3>
+<p>This button creates a new MIDI composition. If the composition you are working on was not saved, you will be asked to do so. The new composition will contain one track using Acoustic Grand Piano and 120 bpm.</p>
+<a name="abrir"></a>
+<h3>Open (<img src="abrir.ico"/>)</h3>
+<p>This button opens an existing MIDI composition, either a MIDI file or a Karaoke file. You may receive an informative message for the first open file, however it does not affect the file. <em>Note:</em> some files have all MIDI events condensed into one single track. If you open such files in the editor, their channels will be splitted into different tracks.</p>
+<a name="salvar"></a>
+<h3>Save (<img src="salvar.ico"/>)</h3>
+<p>This button saves the modifications made to the composition. The resulting file will be a normal MIDI file, compatible with any player.</p>
+<a name="salvarcomo"></a>
+<h3>Save as (<img src="salvarcomo.ico"/>)</h3>
+<p>This button saves the current composition with another name.</p>
+<a name="filtrar"></a>
+<h3>Filter (<img src="filtrar.ico"/>)</h3>
+<p>This button filters the composition, allowing you to strip tracks or groups of events and to reduce the file size by cutting unwanted parts. Also, the resulting file will be compressed, what decreases its size even if there is no cut.</p>
+<a name="tocar"></a>
+<h3>Play (<img src="tocar.ico"/>)</h3>
+<p>This button makes the composition to play from the current playback position (marked with a red line).</p>
+<a name="inicio"></a>
+<h3>Beginning (<img src="inicio.ico"/>)</h3>
+<p>This button makes the playback position return to zero.</p>
+<a name="pausar"></a>
+<h3>Pause (<img src="pausar.ico"/>)</h3>
+<p>This button pauses the execution of the composition</p>
+<a name="fim"></a>
+<h3>End (<img src="fim.ico"/>)</h3>
+<p>This button makes the playback position go to the last page of the composition.</p>
+<a name="parar"></a>
+<h3>Stop (<img src="parar.ico"/>)</h3>
+<p>This button stops the playback of the composition, returing to the position zero.</p>
+<a name="muda"></a>
+<h3>Mute track (<img src="muda.ico"/>)</h3>
+<p>This button blocks sounds from the current track. Click to alternate between turned on and turned off.</p>
+<a name="solo"></a>
+<h3>Solo track (<img src="solo.ico"/>)</h3>
+<p>This button makes the current track the only one to play. Click to alternate between turned on and turned off.</p>
+<a name="loop"></a>
+<h3>Loop composition (<img src="loop.ico"/>)</h3>
+<p>This button makes the composition to loop (return to the beginning) when the playback finishes, instead of stopping. Click to alternate between turned on and turned off.</p>
+<a name="inserirtrilha"></a>
+<h3>Insert track (<img src="inserirtrilha.ico"/>)</h3>
+<p>This button appends a blank track to the composition.</p>
+<a name="removertrilha"></a>
+<h3>Remove track (<img src="removertrilha.ico"/>)</h3>
+<p>This button removes the current track after confirmation. Everything inside the track will be erased with it.</p>
+<a name="copyright"></a>
+<h3>Copyright (<img src="copyright.ico"/>)</h3>
+<p>This button sets the copyright information for the composition.</p>
+<a name="nomedatrilha"></a>
+<h3>Track name (<img src="nomedatrilha.ico"/>)</h3>
+<p>This button sets the name of the current track.</p>
+<a name="numerodatrilha"></a>
+<h3>Track number (<img src="numerodatrilha.ico"/>)</h3>
+<p>This button sets the number of the current track.</p>
+<a name="nomedoinstrumento"></a>
+<h3>Instrument name (<img src="nomedoinstrumento.ico"/>)</h3>
+<p>This button sets the name of the instrument of the current track.</p>
+<a name="ajuda"></a>
+<h3>Help (<img src="ajuda.ico"/>)</h3>
+<p>This button opens this document.</p>
+<a name="sobre"></a>
+<h3>About (<img src="sobre.ico"/>)</h3>
+<p>This button shows a dialog box containing information about the version of the BRELS MIDI Editor.</p>
+<a name="api"></a>
+<h3>API (<img src="api.ico"/>)</h3>
+<p>This button opens the documentation of the BRELS MIDI API.</p>
+<a name="cortar"></a>
+<h3>Cut (<img src="cortar.ico"/>)</h3>
+<p>This button cuts (copies and erases) the selected notes (the ones red colored).</p>
+<a name="copiar"></a>
+<h3>Copy (<img src="copiar.ico"/>)</h3>
+<p>This button copies the selected notes.</p>
+<a name="colar"></a>
+<h3>Paste (<img src="colar.ico"/>)</h3>
+<p>This button pastes copied notes on the playback position (marked with a red line).</p>
+<a name="apagar"></a>
+<h3>Erase (<img src="apagar.ico"/>)</h3>
+<p>This button erases the selected notes.</p>
+<a name="selecionartudo"></a>
+<h3>Select all (<img src="selecionartudo.ico"/>)</h3>
+<p>This button selects all notes of the current track.</p>
+<a name="transpor_acima"></a>
+<h3>Transpose up (<img src="transpor_acima.ico"/>)</h3>
+<p>This button moves the selected notes (or all of them if none is selected) one tone up.</p>
+<a name="transpor_abaixo"></a>
+<h3>Transpose down (<img src="transpor_abaixo.ico"/>)</h3>
+<p>This button moves the selected notes (or all of them if none is selected) one tone down.</p>
+<a name="oitava_acima"></a>
+<h3>Octave up (<img src="oitava_acima.ico"/>)</h3>
+<p>This button moves the selected notes (or all of them if none is selected) one octave up, or 12 tones.</p>
+<a name="oitava_abaixo"></a>
+<h3>Octave down (<img src="oitava_abaixo.ico"/>)</h3>
+<p>This button moves the selected notes (or all of them if none is selected) one octave down, or 12 tones.</p>
+<a name="selecionar"></a>
+<h3>Select (<img src="selecionar.ico"/>)</h3>
+<p>This button chooses the selection mode. Click and drag the mouse to select notes. Use <code>SHIFT</code> to select multiple groups and <code>CTRL</code> to deselect notes.</p>
+<a name="breve"></a>
+<h3>Breve note (<img src="breve.ico"/>)</h3>
+<p>This button chooses a Breve note (8 times a beat). Click on the desired position to place the note.</p>
+<a name="semibreve"></a>
+<h3>Semibreve note (<img src="semibreve.ico"/>)</h3>
+<p>This button chooses a Semibreve note (4 times a beat). Click on the desired position to place the note.</p>
+<a name="minima"></a>
+<h3>Minim note (<img src="minima.ico"/>)</h3>
+<p>This button chooses a Minim note (2 times a beat). Click on the desired position to place the note.</p>
+<a name="seminima"></a>
+<h3>Quarter note (<img src="seminima.ico"/>)</h3>
+<p>This button chooses a Quarter note (a beat). Click on the desired position to place the note.</p>
+<a name="colcheia"></a>
+<h3>Eighth note (<img src="colcheia.ico"/>)</h3>
+<p>This button chooses an Eighth note (half beat). Click on the desired position to place the note.</p>
+<a name="semicolcheia"></a>
+<h3>Sixteenth note (<img src="semicolcheia.ico"/>)</h3>
+<p>This button chooses a Sixteenth note (a quarter of beat). Click on the desired position to place the note.</p>
+<a name="fusa"></a>
+<h3>Thirty-second note (<img src="fusa.ico"/>)</h3>
+<p>This button chooses a Thirty-second note (an eighth of beat). Click on the desired position to place the note.</p>
+<a name="semifusa"></a>
+<h3>Sixty-fourth note (<img src="semifusa.ico"/>)</h3>
+<p>This button chooses a Sixty-fourth note (a sixteenth of beat). Click on the desired position to place the note.</p>
+<a name="instrumento"></a>
+<h3>Instrument (<img src="instrumento.ico"/>)</h3>
+<p>This button changes the instrument for the current track. Left-click on the position where the change will occur. In the dialog box that will appear, you must choose the channel used in the track, the bank and the instrument inside it. The soundcard must be General MIDI 2 compatible in order to use instruments in banks above Bank 0. Click and drag with the mouse to change the event's position. Right-click to erase an existing event.</p>
+<a name="andamento"></a>
+<h3>Tempo (<img src="andamento.ico"/>)</h3>
+<p>This button changes the tempo for the rest of the composition. Left-click on the position where the change will occur. In the dialog box that will appear, you can set the tempo either in beats per minute or in microseconds per beat (a quarter note). Click and drag with the mouse to change the event's position. Right-click to erase an existing event.</p>
+<a name="texto"></a>
+<h3>Text (<img src="texto.ico"/>)</h3>
+<p>This button inserts generic text in the current track. Left-click on the position where you want the text inserted and type it in the dialog box that will appear. Click and drag with the mouse to change the event's position. Right-click to erase an existing event.</p>
+<a name="letra"></a>
+<h3>Lyric (<img src="letra.ico"/>)</h3>
+<p>This button inserts lyrics in the current track. Left-click on the position where you want the lyric inserted and type it in the dialog box that will appear. Generally, each syllable is associated with a note. Type a slash, either "\" or "/" to insert a line-break. Example: "The winner takes it all,/The loser has to fall" becomes:<br/><br/>The winner takes it all<br/>The loser has to fall<br/><br/>Click and drag with the mouse to change the event's position. Right-click to erase an existing event.</p>
+<a name="marcador"></a>
+<h3>Marker (<img src="marcador.ico"/>)</h3>
+<p>This button inserts a marker in the current track. Left-click on the position where you want the marker inserted and type the text in the dialog box that will appear. Click and drag with the mouse to change the event's position. Right-click to erase an existing event.</p>
+<a name="pontodedica"></a>
+<h3>Cue point (<img src="pontodedica.ico"/>)</h3>
+<p>This button inserts a cue point in the current track. Left-click on the position where you want the cue point inserted and type the text in the dialog box that will appear. Click and drag with the mouse to change the event's position. Right-click to erase an existing event.</p>
+<a name="desconhecido"></a>
+<h3>Unknown (<img src="desconhecido.ico"/>)</h3>
+<p>This button is used to erase unsupported events. Although some events are unsupported in this editor, they may be used by the application were the MIDI file was previously edited.</p>
+<a name="janela"></a>
+<h2>Application window</h2>
+<p>Besides the command buttons, there many other elements used in editor.</p>
+<h3>Piano keys</h3>
+<p>Click on the piano keys to hear the sound associated to a note in the current track's instrument. Also, the piano shows the note corresponding to the mouse position.</p>
+<h3>Time ruler</h3>
+<p>Just below the command buttons is a ruler containing time positions. Use them when inserting notes. You can click on it (when the mouse cursor becomes a black arrow pointing up) to change the current playback position (marked by the red line) at any time. The time is indicated in <code>minutes:seconds:microseconds</code>.</p>
+<h3>Event bar</h3>
+<p>Below the time ruler is a bar where you can edit events that are not notes or controllers. Here you can find events like instrument change, tempo change, lyrics, text, markers, cue points and unsupported events. Use the left mouse button to insert, edit and reposition those events. Use the right mouse button to erase them.</p>
+<h3>Notes panel</h3>
+<p>This panel is located in the center of the application window and it is where you can work with notes. Use the vertical gray lines to measure your composition. If the selection mode is used (<img src="selecionar.ico"/>), you can drag the mouse to make a selection. Click in the left or right borders of a note to expand or contract it. Click in the center of a note and drag it to move its position. If a note button is selected (<img src="seminima.ico"/>, <img src="colcheia.ico"/>, etc.), you can place a note clicking with left mouse button. A dotted shadow will indicate the position where the note will be placed. If you have problems to work with notes, try to reduce the beat ticks to lower values. In this panel, a strong black line indicates the end of the composition. You can go beyond that limit indefinitely to place notes or other MIDI events.</p>
+<h3>Controllers panel</h3>
+<p>This panel is located in the bottom of the application window and it is where you can work with controllers, velocity of the notes and pitch changes. Though the two latter are not controllers, they were grouped with them because their behaviour is similar. Use the left mouse button to insert or update a controller to the value indicated by its height. Controllers and velocity ranges from 0 to 127. Press <code>SHIFT</code> to set a value of 64 (the default) for them. The Pitch wheel ranges from -8192 to 8191 (or, practically speaking, from -1.0 tone to +1.0 tone), the default being zero. Use the right mouse button to erase a controller value. The affected event is the one painted with red. If you have trouble to select an event, try to reduce the number of ticks of a beat. Drag the mouse while clicking to set/erase multiple events.</p>
+<h3>Track selector</h3>
+<p>This combo box lists all the tracks of a composition, and the instruments or channels being used by those tracks. If a track indicates a channel number instead of an instrument name, it is because notes or controllers are present in the track, but an instrument definition could not be understood correctly by the editor.</p>
+<h3>MIDI device selector</h3>
+<p>This combo box lists all the MIDI output devices available, including the MIDI Mapper, so you can choose with which of them the composition will be played. You can set it at any time.</p>
+<h3>Zoom selector</h3>
+<p>This combo box sets the magnification with what the tracks will be shown. Choose lower values to view more notes and events, and choose higher values to have tick precision when working with notes and other events.</p>
+<h3>Beat ticks selector</h3>
+<p>This combo box sets the length, in ticks, of a beat or quarter note. This defines in how many smaller parts a quarter note can be divided. The default and minimum is 16 for the editor, since the smallest note is the sixty-fourth (<img src="semifusa.ico"/>), which is 1/16 of a quarter note (<img src="seminima.ico"/>). You can specify higher values, if you need notes smaller than the sixty-fourth. In fact, the length of a quarter note can range from 1 to 65535 ticks, but it is limited to 3200 in boundaries of 16 ticks in this editor. When you change the value of the beat ticks, existing notes and events are resized and repositioned in order to conserve the original composition. If you keep <code>SHIFT</code> pressed, no modification will be made, and the composition will become faster or slower according to the new value. For example, changing the beat ticks from 48 to 64 will make the composition 33% faster (64 / 48 = 1.3333333).</p>
+<h3>Controller selector</h3>
+<p>This combo box chooses which of these to use: velocity/pitch/controllers. When you change the selection, the controller panel shows the values set for the combo box selection.</p>
+<a name="mouse"></a>
+<h2>Mouse</h2>
+<p>The mouse has many functions, depending on where you click or move it.</p>
+<h3>Moving the mouse</h3>
+<p>When you move the mouse, several indicators change to reflect the current position. The piano shows the note corresponding to that mouse position. A green line shows the time position of the note in the same way. The controller/pitch change/velocity that lies in that mouse position becomes red. If the mouse pointer hovers on a note, the cursor changes to indicate the possibility of transposition or resizing of the note. Also, the title bar of the application shows the tick and the time location of the current mouse position.</p>
+<p>If you move the mouse after clicking, you'll be dragging it. In selection mode (<img src="selecionar.ico"/>), dragging the mouse selects notes. Use <code>SHIFT</code> to do multiple selections. Use <code>CTRL</code> to deselect notes. In the controller panel, dragging the mouse horizontally may either set consecutive controllers or erase them. You can set the level of a single controller dragging the mouse vertically. In the piano keyboard, it will play a scale of notes. In the event bar, it will drag events such as tempo or instrument changes.</p>
+<h3>Clicking with the mouse</h3>
+<p>When you click with the <em>left</em> mouse button, you'll be modifying something in the composition. If you click on the piano, it will play the chosen note and will only stop when you release the button. If you click on the time ruler, the playback position (shown by a red line) will change. If you click on the event bar, a new event of the selected type (tempo, instrument change, etc.) will be placed at that position. If you click on the notes panel, either a selection will start or a new note will be placed. If you click on the controller panel, a new controller will be placed or an existing one will have its value updated.</p>
+<p>When you click with the <em>right</em> mouse button, you'll be erasing something in the composition. If you click on the event bar, you will erase the event under the mouse pointer, if any is. If you click on the controller panel, you will erase the controller or pitch change at that position. Velocities are vinculated to notes.</p>
+<a name="teclado"></a>
+<h2>Keyboard</h2>
+<p>You can use keyboard shortcuts in order to agilize tasks or have a more precise control over actions. Below is a list of shortcuts used in the editor (the operating system shortcuts, such as <code>ALT+F4</code>, are not included)</p>
+<table>
+<tr><td><strong>Key</strong></td><td><strong>Function</strong></td></tr>
+<tr><td><code>ESC</code></td><td>Cancels current operation</td></tr>
+<tr><td><code>LEFT arrow</code></td><td>Moves selected notes to the left</td></tr>
+<tr><td><code>RIGHT arrow</code></td><td>Moves selected notes to the right</td></tr>
+<tr><td><code>UP arrow</code></td><td>Moves selected notes one tone up</td></tr>
+<tr><td><code>DOWN arrow</code></td><td>Moves selected notes one tone down</td></tr>
+<tr><td><code>PAGE UP</code></td><td>Moves selected notes one octave up</td></tr>
+<tr><td><code>PAGE DOWN</code></td><td>Moves selected notes one octave down</td></tr>
+<tr><td><code>HOME</code></td><td>Goes to the beginning of the composition</td></tr>
+<tr><td><code>END</code></td><td>Goes to the last screen of the composition</td></tr>
+<tr><td><code>DELETE</code></td><td>Erases the selected notes</td></tr>
+<tr><td><code>CTRL+C</code></td><td>Copies the selected notes</td></tr>
+<tr><td><code>CTRL+V</code></td><td>Pastes copied notes on the playback position</td></tr>
+<tr><td><code>CTRL+X</code></td><td>Cuts the selected notes</td></tr>
+<tr><td><code>CTRL+A</code></td><td>Selects all notes of the track</td></tr>
+<tr><td><code>Key 0 to Key 9</code></td><td>Selects an octave of the piano</td></tr>
+<tr><td><code>Keys A, S, D, F, G, H, J, K and L</code></td><td>Plays plain notes, depending on the piano position</td></tr>
+<tr><td><code>Keys W, E, T, Y, U, O and P</code></td><td>Plays sharp notes, depending on the piano position</td></tr>
+<tr><td><code>SHIFT</code></td><td>Allows to select multiple notes or groups in the selection mode (<img src="selecionar.ico"/>)</td></tr>
+<tr><td><code>CTRL</code></td><td>Allows to exclude multiple notes or groups in the selection mode (<img src="selecionar.ico"/>)</td></tr>
+</table>
+<a name="mais"></a>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

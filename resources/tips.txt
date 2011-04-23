@@ -1,0 +1,53 @@
+Creates a new composition
+Opens a composition
+Saves the current composition
+Saves the current composition with another name
+Plays the current composition
+Goes to the beginning of the composition
+Pauses the playback
+Goes to the end of the composition
+Stops playback
+Mutes the current track
+Makes the current track the only to play
+Loops playback
+Appends a blank track to the composition
+Removes the current track
+Sets copyright information
+Sets the name of the current track
+Sets the number of the current track
+Sets the name of the track's instrument
+Opens the help of the BRELS MIDI Editor
+About the BRELS MIDI Editor...
+Opens the BRELS MIDI API documentation
+Cuts the selected notes
+Copies the selected notes
+Pastes notes at the current playback position
+Deletes the selected notes
+Selects all notes
+Moves the selected notes (or all if there is no selection) one tone up
+Moves the selected notes (or all if there is no selection) one tone down
+Moves the selected notes (or all if there is no selection) one octave up
+Moves the selected notes (or all if there is no selection) one octave down
+Changes to selection mode
+Places a breve note
+Places a semibreve note
+Places a minim note
+Places a quarter note
+Places an eighth note
+Places a sixteenth note
+Places a thirty-second note
+Places a sixty-fourth note
+Sets the current instrument
+Sets the current tempo
+Places text
+Places lyrics
+Places a marker
+Places a cue point
+Erases unsupported events
+Creates a new composition from the current composition, choosing which events and tracks to use.
+Shows the raw MIDI Data for analysis.
+Chooses which track to show on the screen
+Chooses the playback device
+Chooses the magnification of the screen
+Sets the length of a quarter note (hold down <SHIFT> to not conserve the notes' size)
+Sets velocity/pitch/controller (hold down <SHIFT> while clicking to set the standard value)

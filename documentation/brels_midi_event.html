@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title>BRELS_MIDI_EVENT structure</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; }</style>
+</head>
+<body>
+<h2>BRELS_MIDI_EVENT</h2>
+<pre>typedef struct
+{
+	WORD wTag;
+	DWORD dwTicks;
+	BYTE Event; 
+	BYTE DataSize;
+	union
+	{
+		BYTE Data[4]; 
+		LPBYTE lpData;
+	};
+} BRELS_MIDI_EVENT, *LPBRELS_MIDI_EVENT;</pre>
+<p>This structure is used to represent MIDI events in the API. It is more convenient than the <strong>MIDIEVENT</strong> structure provided by the Windows&trade; API.</p>
+<h3>Members</h3>
+<ul>
+<li><strong>wTag</strong>: user-defined value for the event. It has no role in the API.</li>
+<li><strong>dwTicks</strong>: position in ticks of the event. Its meaning varies according to the beat size of the sequence.</li>
+<li><strong>Event</strong>: event byte. See the <a href="list.html">list of MIDI events</a>.</li>
+<li><strong>DataSize</strong>: size of the event data, in bytes.</li>
+<li><strong>Data</strong>: <code>BYTE</code> array containing the data of short events (those between 0x80 and 0xEF, and above 0xF0).</li>
+<li><strong>lpData</strong>: pointer to a <code>BYTE</code> array containing the data of long events (those below 0x80 and the system-exclusive event, 0xF0)</li>
+</ul>
+<h3>Remarks</h3>
+<p>Use the correct data size when creating MIDI files otherwise the sequence will be encoded incorrectly.</p>
+<p>Short events are the ones with predefined sizes, generally zero, one or two bytes. Long events are the ones with variable sizes, such as names and texts inserted in the sequence. However, some events do have predefined sizes but are considered long events due to the MIDI specification. That is the case of tempo (0x51), which is three bytes long.</p>
+<h3>Example</h3>
+<p>For an example of code, see <a href="midiinserttrackevents.html">MidiInsertTrackEvents</a></p>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

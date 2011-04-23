@@ -1,0 +1,90 @@
+<html>
+<head>
+	<title> MidiInsertTrackEvents function</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; }</style>
+</head>
+<body>
+<h2>MidiInsertTrackEvents</h2>
+<pre>DWORD WINAPI MidiInsertTrackEvents
+(
+	HANDLE hSequence, 
+	WORD wTrack, 
+	DWORD dwEvents, 
+	LPBRELS_MIDI_EVENT lpEvents
+);</pre>
+<p>This function inserts one or more MIDI events (encoded in a <a href="brels_midi_event.html">BRELS_MIDI_EVENT</a> array) into a track of the desired sequence.</p>
+<h3>Parameters</h3>
+<ul>
+<li><strong>hSequence</strong>: handle of the sequence where the events will be inserted.</li>
+<li><strong>wTrack</strong>: index of the track where the events will be inserted.</li>
+<li><strong>dwEvents</strong>: number of MIDI events in the array.</li>
+<li><strong>lpEvents</strong>: pointer to an array of <a href="brels_midi_event.html">BRELS_MIDI_EVENT</a> structures which will contain the events.</li>
+</ul>
+<h3>Return values</h3>
+<p>Returns the new number of events in the track, or zero if an error occurred. The most likely causes to an error are an invalid sequence handle, an invalid track index or an invalid events array.</p>
+<h3>Remarks</h3>
+<p>Be sure that the array of events has the correct size and its structures are correctly filled. Check <a href="brels_midi_event.html">BRELS_MIDI_EVENT</a> for more information. The events do not need to be ordered. The end-of-track event (0x2F) is not necessary since it is automatically appended to the sequence.</p>
+<p>When filling many events at once, you could use a helper function just like the one in the example below:</p>
+<h3>Example</h3>
+<pre>
+void FillEvent
+(
+	LPBRELS_MIDI_EVENT lpEvent, 
+	WORD wTag, 
+	DWORD dwTicks, 
+	BYTE Event, 
+	BYTE DataSize, 
+	LPBYTE lpData
+)
+{
+	lpEvent->wTag = wTag;
+	lpEvent->dwTicks = dwTicks;
+	lpEvent->Event = Event;
+	lpEvent->DataSize = DataSize;
+	if ((Event<0x80) || (Event==0xF0)) // Variable-length events
+		lpEvent->lpData = lpData;
+	else
+		CopyMemory(&lpEvent->Data, lpData, DataSize);
+};
+
+void Encode()
+{
+	HANDLE Sequence;
+	BRELS_MIDI_EVENT Events[17];
+
+	MidiCreate(NO_DEVICE, 16, &Sequence);
+
+	// Tempo: 16 ticks mean 500000 (0x07A120) microseconds
+	FillEvent(&Events[ 0], 0,   0, 0x51, 3, "\x07\xA1\x20");
+	FillEvent(&Events[ 1], 0,   0, 0x90, 2, "\x40\x7F"); // E5 On
+	FillEvent(&Events[ 2], 0,  32, 0x80, 2, "\x40\x00"); // E5 Off
+	FillEvent(&Events[ 3], 0,  32, 0x90, 2, "\x41\x7F"); // F5 On
+	FillEvent(&Events[ 4], 0,  64, 0x80, 2, "\x41\x00"); // F5 Off
+	FillEvent(&Events[ 5], 0,  64, 0x90, 2, "\x43\x7F"); // G5 On
+	FillEvent(&Events[ 6], 0,  96, 0x80, 2, "\x43\x00"); // G5 Off
+	FillEvent(&Events[ 7], 0,  96, 0x90, 2, "\x45\x7F"); // A5 On
+	FillEvent(&Events[ 8], 0, 128, 0x80, 2, "\x45\x00"); // A5 Off
+	FillEvent(&Events[ 9], 0, 128, 0x90, 2, "\x40\x7F"); // E5 On
+	FillEvent(&Events[10], 0, 160, 0x80, 2, "\x40\x00"); // E5 Off
+	FillEvent(&Events[11], 0, 160, 0x90, 2, "\x41\x7F"); // F5 On
+	FillEvent(&Events[12], 0, 192, 0x80, 2, "\x41\x00"); // F5 Off
+	FillEvent(&Events[13], 0, 192, 0x90, 2, "\x43\x7F"); // G5 On
+	FillEvent(&Events[14], 0, 224, 0x80, 2, "\x43\x00"); // G5 Off
+	FillEvent(&Events[15], 0, 224, 0x90, 2, "\x45\x7F"); // A5 On
+	FillEvent(&Events[16], 0, 256, 0x80, 2, "\x45\x00"); // A5 Off
+
+	MidiInsertTrack(Sequence, 0);
+	MidiInsertTrackEvents(Sequence, 0, 17, (LPBRELS_MIDI_EVENT) &Events);
+	MidiEncode(Sequence, "test1.mid", TRUE);
+	MidiClose(Sequence);
+};</pre>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

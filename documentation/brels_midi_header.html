@@ -1,0 +1,45 @@
+<html>
+<head>
+	<title>BRELS_MIDI_HEADER structure</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; }</style>
+</head>
+<body>
+<h2>BRELS_MIDI_HEADER</h2>
+<pre>typedef struct
+{
+	DWORD dwMagic;
+	DWORD dwSize;
+	WORD  wFormat;
+	WORD  wTracks;
+	WORD  wBeatSize;
+} BRELS_MIDI_HEADER, *LPBRELS_MIDI_HEADER;</pre>
+<p>This is the MIDI header as found in a MIDI file. The header is the first 14 bytes of any MIDI file.</p>
+<h3>Members</h3>
+<ul>
+<li><strong>dwMagic</strong>: "magic" number which identifies MIDI files. It is always 0x4D546864 (MThd)</li>
+<li><strong>dwSize</strong>: size of the rest of the header. It is always 0x00000006.</li>
+<li><strong>wFormat</strong>: format of the file. Format zero is a single-track file; format 1 is a multi-track file where all of them start at the same time; format 2 is a multi-track file with assynchronous tracks (assynchronous tracks are not supported by the API).</li>
+<li><strong>wTracks</strong>: number of tracks in the file.</li>
+<li><strong>wBeatSize</strong>: number of ticks in a quarter note (a beat). This applies to the entire sequence</li>
+</ul>
+<h3>Remarks</h3>
+<p>Due to the difference between the storage method of the file and its memory representation, the byte order of values in each member of the structure is reversed. Use <a href="btlw.html">btlw</a> and <a href="btldw.html">btldw</a> to correct them:</p>
+<h3>Example</h3>
+<pre>void CorrectMidiHeader(LPBRELS_MIDI_HEADER lpbmh)
+{
+	lpbmh->dwMagic = btldw(lpbmh->dwMagic);
+	lpbmh->dwSize = btldw(lpbmh->dwSize);
+	lpbmh->wFormat = btlw(lpbmh->wFormat);
+	lpbmh->wTracks = btlw(lpbmh->wTracks);
+	lpbmh->wBeatSize = btlw(lpbmh->wBeatSize);
+};</pre>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

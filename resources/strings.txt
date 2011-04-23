@@ -1,0 +1,88 @@
+Teste
+Insert text
+Write the text here
+Insert lyric
+Write the lyric here
+Insert marker
+Write the marker text here
+Insert cue point
+Write the cue text here
+Channel #
+Percussion
+Unknown
+Set instrument
+Erase
+Ok
+Cancel
+Bank 
+Change instrument
+Set Tempo
+Change Tempo
+Beats per minute
+Quarter note duration (�s)
+Track 
+Do you wish to remove the track?
+Confirm
+At least one track is required.
+Remove track
+New
+It was impossible to create the new composition. Make sure that any other playing MIDI files are closed.
+Error
+Copyright (C) 2011
+Track 1
+The composition was not saved yet. Save it now?
+Supported files (*.mid; *.midi; *.kar)$*.mid;*.midi;*.kar$MIDI files (*.mid; *.midi)$*.mid;*.midi$Karaoke files (*.kar)$*.kar$All files (*.*)$*.*$
+mid
+Open
+Invalid file.
+If you experience problems to select notes, controllers and other MIDI events, try to change the quarter note (beat) size to 16 ticks
+BRELS MIDI Editor v0.08
+Unknown, 
+ - Instrument 
+ bpm
+Unknown (0x
+ Ticks
+ - Not saved
+Close
+Copyright information
+Place the copyright here.~^Format: (C) Year, Owner
+Track name
+Write the name of the track
+Track number
+Write the number of the track
+Invalid track number
+Instrument name
+Write the name of the track instrument 
+BRELS MIDI Editor v0.08~^~^Copyright (C) 2003-2011 Breno de Lima Sarmento~^E-mail:	breno@sarmen.to~^Website:	http://midi.brels.net/~^~^Created in August 15th, 2003~^Current release in April 23rd, 2011~^~^This program is free software: you can redistribute it and/or modify~^it under the terms of the GNU General Public License as published by~^the Free Software Foundation, either version 3 of the License, or~^(at your option) any later version.~^~^This program is distributed in the hope that it will be useful,~^but WITHOUT ANY WARRANTY; without even the implied warranty of~^MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the~^GNU General Public License for more details.~^~^You should have received a copy of the GNU General Public License~^along with this program.  If not, see <http://www.gnu.org/licenses/>.
+About
+Untitled.mid
+Filter composition
+New composition file
+Browse
+Interval to cut (tempo changes may affect its final length)
+Beginning
+End
+Exclude this interval
+Tracks to use
+MIDI events to use
+Loading the BRELS MIDI Editor v0.08
+
+Copyright information
+Track name
+Track number
+Track's instrument name
+Notes
+Instrument change
+Tempo change
+General purpose text
+Lyrics
+Marker
+Cue point
+Channel pitch
+Controller's setting
+Other MIDI events
+ - filtered
+The file where the filtered composition will be stored already exists. Do you want to overwrite?
+Warning
+Conserve the original ticks of the quarter note
+The selected interval is invalid (it must be longer than zero and shorter or equal to the composition's length)

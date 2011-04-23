@@ -1,0 +1,67 @@
+<html>
+<head>
+	<title>MidiGetTrackEvents function</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; }</style>
+</head>
+<body>
+<h2>MidiGetTrackEvents</h2>
+<pre>DWORD WINAPI MidiGetTrackEvents
+(
+	HANDLE hSequence, 
+	WORD wTrack, 
+	QWORD qwFirst, 
+	QWORD qwLast, 
+	DWORD dwFormat, 
+	LPBRELS_MIDI_EVENT* lpEvents
+);</pre>
+<p>This function copies the selected range of events from a track.</p>
+<h3>Parameters</h3>
+<ul>
+<li><strong>hSequence</strong>: handle of the sequence from where events will be copied.</li>
+<li><strong>wTrack</strong>: index of the track from where events will be copied.</li>
+<li><strong>qwFirst</strong>: first value of the event range to be copied.</li>
+<li><strong>qwLast</strong>: last value of the event range to be copied.</li>
+<li><strong>dwFormat</strong>: type of event range to get. Use <code>MIDI_INDEX</code> for event indexes or <code>MIDI_TICKS</code> for the tick position of events.</li>
+<li><strong>lpEvents</strong>: address of a <a href="brels_midi_event.html">BRELS_MIDI_EVENT</a> pointer. This variable will point to the desired events.</li>
+</ul>
+<h3>Return values</h3>
+<p>Returns the number of events copied or zero if no event was copied or an error occurred.</p>
+<h3>Remarks</h3>
+<p>The function will allocate an array of <strong>BRELS_MIDI_EVENT</strong> structures and store the address in the pointer provided in <em>lpEvents</em>. After you have finished with the events, deallocate them calling <a href="midicleanevents.html">MidiCleanEvents</a> passing the number of events returned by <strong>MidiGetTrackEvents</strong> and the <em>lpEvents</em> pointer.</p>
+<p>If you need to get events of an specified type, use <a href="midifiltertrackevents.html">MidiFilterTrackEvents</a>.</p>
+<p>When updating events, you must remove the old events and insert updated ones. The following example transposes notes from the specified track by the desired number of tones, up or down:</p>
+<h3>Example</h3>
+<pre>void Transpose(HANDLE Sequence, WORD wTrack, int Offset)
+{
+	int i, nEvents;
+	LPBRELS_MIDI_EVENT lpEvents;
+
+	// Copies everything from the track
+	nEvents = MidiTrackGet(Sequence, wTrack, EVENT_COUNT);
+	MidiGetTrackEvents(Sequence, wTrack, 0, nEvents-1, MIDI_INDEX, &lpEvents);
+
+	// Truncates the track
+	MidiRemoveTrack(Sequence, wTrack);
+	MidiInsertTrack(Sequence, wTrack);
+
+	// Do the transposition on note events (8<em>x</em> and 9<em>x</em>)
+	for (i = 0; i < nEvents; i++)
+		if ((lpEvents[i].Event >= 0x80) && (lpEvents[i].Event <=0x9F))
+			lpEvents[i].Data[0] += Offset;
+
+	// Reinsert the events, now updated
+	MidiInsertTrackEvents(Sequence, wTrack, nEvents, lpEvents);
+
+	// Clean up the array
+	MidiCleanEvents(nEvents, lpEvents);
+};</pre>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

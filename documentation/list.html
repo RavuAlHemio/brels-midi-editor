@@ -1,0 +1,54 @@
+<html>
+<head>
+	<title>List of MIDI events</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; } td { border-style: double; border-width: 3px;} </style>
+</head>
+<body>
+<h2>List of MIDI events</h2>
+<p>The following table summarizes the byte codes of the MIDI events. Short events are the ones with data stored in the <em>Data</em> member of the <a href="brels_midi_event.html">BRELS_MIDI_EVENT</a> structure. Long events are the ones with data stored in variable size array with address stored in the <em>lpData</em> of the structure.</p>
+<table>
+<tr><td><strong>Event</strong></td><td><strong>Byte</strong></td><td><strong>Type</strong></td><td><strong>Description</strong></td></tr>
+<tr><td>Sequence number</td><td>0x00</td><td>Long</td><td>2 bytes informing the sequence number</td></tr>
+<tr><td>Text</td><td>0x01</td><td>Long</td><td>General-purpose text</td></tr>
+<tr><td>Copyright</td><td>0x02</td><td>Long</td><td>Copyright information</td></tr>
+<tr><td>Track name</td><td>0x03</td><td>Long</td><td>Text corresponding to the name of a track</td></tr>
+<tr><td>Instrument name</td><td>0x04</td><td>Long</td><td>Name of the instrument</td></tr>
+<tr><td>Lyrics</td><td>0x05</td><td>Long</td><td>Lyrics text. Generally, each event corresponds to syllable of the song. Use a slash (either "\" or "/") to cause a line break.</td></tr>
+<tr><td>Marker</td><td>0x06</td><td>Long</td><td>Marker text for something internal to the sequence (for example, "piano plays") </td></tr>
+<tr><td>Cue point</td><td>0x07</td><td>Long</td><td>Hint text for something external to the sequence (for example, "curtains open")</td></tr>
+<tr><td>Channel prefix</td><td>0x20</td><td>Long</td><td>1 byte to associate events to a channel</td></tr>
+<tr><td>End of track</td><td>0x2F</td><td>Long</td><td>Marks the end of track. Contains no data</td></tr>
+<tr><td>Tempo change</td><td>0x51</td><td>Long</td><td>3-byte value indicating the duration of a beat in microseconds</td></tr>
+<tr><td>SMPTE offset</td><td>0x54</td><td>Long</td><td>Offset in SMPTE format of the start of an assynchronous track (not supported in the API)</td></tr>
+<tr><td>Time signature</td><td>0x58</td><td>Long</td><td>Time signature of the sequence</td></tr>
+<tr><td>Key signature</td><td>0x59</td><td>Long</td><td>Key signature of the sequence</td></tr>
+<tr><td>Sequencer specific data</td><td>0x7F</td><td>Long</td><td>Sequencer specific data</td></tr>
+<tr><td>Note off</td><td>0x8<em>n</em></td><td>Short</td><td>Turns the sound of a note off in channel <em>n</em>. The first byte of data is the note and the second byte of data is the velocity. Both range from 0 to 127.</td></tr>
+<tr><td>Note on</td><td>0x9<em>n</em></td><td>Short</td><td>Turns the sound of a note on in channel <em>n</em>. The first byte of data is the note and the second byte of data is the velocity. Both range from 0 to 127.</td></tr>
+<tr><td>Key aftertouch</td><td>0xA<em>n</em></td><td>Short</td><td>Sets the pressure of a note in channel <em>n</em>. The first byte of data is the note and the second byte of data is the pressure. Both range from 0 to 127.</td></tr>
+<tr><td>Controller change</td><td>0xB<em>n</em></td><td>Short</td><td>Sets the value of a controller in channel <em>n</em>. The first byte of data is the controller number and the second byte of data is the controller value. Both range from 0 to 127.</td></tr>
+<tr><td>Program change</td><td>0xC<em>n</em></td><td>Short</td><td>Sets the instrument for channel <em>n</em>. The byte of data is the program number and ranges from 0 to 127.</td></tr>
+<tr><td>Channel pressure</td><td>0xD<em>n</em></td><td>Short</td><td>Sets the note pressure for channel <em>n</em>. The byte of data is the pressure value and ranges from 0 to 127.</td></tr>
+<tr><td>Pitch change</td><td>0xE<em>n</em></td><td>Short</td><td>Sets the relative pitch for channel <em>n</em>. The pitch is stored this way: 0xxxxxxx 0yyyyyyy, where the value is yyyyyyyxxxxxxx. It ranges from 0x0000 to 0x3FFF. Zero corresponds to -1.0 tone, 0x2000 means normal pitch and 0x3FFF means +1.0 tone.</td></tr>
+<tr><td>System exclusive data</td><td>0xF0</td><td>Long</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>MTC Quarter Frame</td><td>0xF1</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>Song position pointer</td><td>0xF2</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>Song select</td><td>0xF3</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>Tune request</td><td>0xF6</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>MIDI Clock</td><td>0xF8</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>MIDI Start</td><td>0xFA</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>MIDI Continue</td><td>0xFB</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>MIDI Stop</td><td>0xFC</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+<tr><td>Active Sense</td><td>0xFE</td><td>Short</td><td>Specific to MIDI hardware devices. You should strip it from MIDI files</td></tr>
+</table>
+<p>You can find a list of controllers and instruments in this website: <a href="http://void.vgmidi.com/midiinfo.html">The void</a>. The sample application <a href="../mididec.exe">midi decoder</a> can help you to understand this list better.</p>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

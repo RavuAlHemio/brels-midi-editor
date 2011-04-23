@@ -1,0 +1,1408 @@
+Acoustic Grand Piano
+Bright Acoustic Piano
+Electric Grand Piano
+Honky-tonk Piano
+Rhodes Piano
+Chorused Electric Piano
+Harpsichord
+Clavinet
+Celesta
+Glockenspiel
+Music Box
+Vibraphone
+Marimba
+Xylophone
+Tubular-bell
+Santur
+Hammond Organ
+Percussive Organ
+Rock Organ
+Church Organ 1
+Reed Organ
+French Accordion
+Harmonica
+Bandoneon
+Nylon-String Guitar
+Steel-String Guitar
+Jazz Guitar
+Clean Electric Guitar
+Muted Electric Guitar
+Overdriven Guitar
+Distortion Guitar
+Guitar Harmonics
+Acoustic Bass
+Fingered Bass
+Picked Bass
+Fretless Bass
+Slap Bass 1
+Slap Bass 2
+Synth Bass 1
+Synth Bass 2
+Violin
+Viola
+Cello
+Contrabass
+Tremolo Strings
+Pizzicato Strings
+Harp
+Timpani
+String Ensemble
+Slow String Ensemble
+Synth Strings 1
+Synth Strings 2
+Choir Aahs
+Voice Oohs
+Synth Voice
+Orchestra Hit
+Trumpet
+Trombone
+Tuba
+Muted Trumpet
+French Horns
+Brass Section 1
+Synth Brass 1
+Synth Brass 2
+Soprano Sax
+Alto Sax
+Tenor Sax
+Baritone Sax
+Oboe
+English Horn
+Bassoon
+Clarinet
+Piccolo
+Flute
+Recorder
+Pan Flute
+Bottle Blow
+Shakuhachi
+Whistle
+Ocarina
+Square Lead
+Saw Lead
+Synth Calliope
+Chiffer Lead
+Charang
+Solo Synth Vox
+5th Saw Wave
+Bass & Lead
+Fantasia Pad
+Warm Pad
+Polysynth Pad
+Space Voice Pad
+Bowed Glass Pad
+Metal Pad
+Halo Pad
+Sweep Pad
+Ice Rain
+Soundtrack
+Crystal
+Atmosphere
+Brightness
+Goblin
+Echo Drops
+Star Theme
+Sitar
+Banjo
+Shamisen
+Koto
+Kalimba
+Bagpipe
+Fiddle
+Shanai
+Tinkle Bell
+Agogo
+Steel Drums
+Woodblock
+Taiko
+Melodic Tom 1
+Synth Drum
+Reverse Cymbal
+Guitar Fret Noise
+Breath Noise
+Seashore
+Bird
+Telephone 1
+Helicopter
+Applause
+Gun Shot
+Wet Acoustic Grand
+Wet Bright Acoustic
+Wet Electric Grand
+Wet Honky-tonk
+Detuned Electric Piano 1
+Detuned Electric Piano 2
+Coupled Harpsichord
+Pulse Clavinet
+
+
+
+Wet Vibraphone
+Wet Marimba
+
+Church Bell
+
+Detuned Organ 1
+Detuned Organ 2
+
+Church Organ 2
+Puff Organ
+Italian Accordion
+
+
+Ukulele
+12-String Guitar
+Hawaiian Guitar
+Chorus Guitar
+Funk Guitar
+Guitar Pinch
+Feedback Guitar
+Guitar Feedback
+
+Finger Slap
+
+
+
+
+Synth Bass 101
+Synth Bass 4
+Slow Violin
+
+
+
+
+
+Yang Qin
+
+Orchestra Strings
+
+Synth Strings 3
+
+Choir Aahs 2
+Humming
+Analog Voice
+Bass Hit
+Dark Trumpet
+Trombone 2
+
+Muted Trumpet 2
+French Horn 2
+Brass Section 2
+Synth Brass 3
+Synth Brass 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Square Wave
+Saw Wave
+
+
+Wire Lead
+
+
+Delayed Lead
+
+Sine Pad
+
+Itopia
+
+
+
+
+
+
+Synth Mallet
+
+
+
+Echo Bell
+
+Sitar 2
+
+
+Taisho Koto
+
+
+
+
+
+
+
+Castanets
+Concert Bass Drum
+Melodic Tom 2
+808 Tom
+
+Guitar Cut Noise
+Flute Key Click
+Rain
+Dog
+Telephone 2
+Car-Engine
+Laughing
+Machine Gun
+Dry Acoustic Grand
+
+
+
+Electric Piano 1 Variation
+Electric Piano 2 Variation
+Wet Harpsichord
+
+
+
+
+
+
+
+Carillon
+
+60's Organ 1
+Organ 5
+
+Church Organ 3
+
+
+
+
+Open Nylon Guitar
+Mandolin
+
+Mid Tone Guitar
+Funk Guitar 2
+
+Distortion Rtm Guitar
+
+
+
+
+
+
+
+Synth Bass 3
+Rubber Bass
+
+
+
+
+
+
+
+
+60's Strings
+
+
+
+
+
+
+6th Hit
+
+Bright Trombone
+
+
+
+
+Analog Brass 1
+Analog Brass 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sine Wave
+Doctor Solo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Echo Pan
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Electric Percussion
+
+String Slap
+
+Thunder
+Horse-Gallop
+Door Creaking
+Car-Stop
+Screaming
+Lasergun
+
+
+
+
+60's Electric Piano
+Electric Piano Legend
+Open Harpsichord
+
+
+
+
+
+
+
+
+
+Organ 4
+
+
+
+
+
+
+
+Nylon Guitar 2
+Steel + Body
+
+
+Jazz Man
+
+
+
+
+
+
+
+
+
+Clavi Bass
+Attack Pulse
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Euro Hit
+
+
+
+
+
+
+Jump Brass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Natural Lead
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wind
+Bird 2
+Door Closing
+Car-Pass
+Punch
+Explosion
+
+
+
+
+
+Electric Piano Phase
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hammer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sequenced Saw
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stream
+
+Scratch
+Car-Crash
+Heart Beat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bubble
+
+Wind Chimes
+Siren
+Footsteps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Train
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Jetplane
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Starship
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Burst Noise
+
+
+Standard Kit
+
+
+
+
+
+
+
+Room Kit
+
+
+
+
+
+
+
+Power Kit
+
+
+
+
+
+
+
+Electronic Kit
+TR-808 Kit
+
+
+
+
+
+
+Jazz Kit
+
+
+
+
+
+
+
+Brush Kit
+
+
+
+
+
+
+
+Orchestra Kit
+
+
+
+
+
+
+
+Sound FX Kit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

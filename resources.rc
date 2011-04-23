@@ -1,0 +1,46 @@
+/* Adapted from:
+	http://msdn.microsoft.com/en-us/library/aa381058(v=vs.85).aspx#CodeSpippet2 
+	http://readthedocs.org/docs/pvdevtools_doc/latest/devel/IDEs/GNU_minGW/windres/windres.html#id3image-windows-resource-file-example-resfile-rc
+*/
+
+1 VERSIONINFO
+ FILEVERSION 0,0,8,0
+ PRODUCTVERSION 0,0,8,0
+ FILEFLAGSMASK 0x17L
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4" /* 0x0409 0x04E4 = 1252 */ 
+        BEGIN
+            VALUE "CompanyName", "BRELS\0"
+            VALUE "FileDescription", "BRELS MIDI Editor\0"
+            VALUE "FileVersion", "0,0,8,0\0"
+            VALUE "InternalName", "midiedit\0"
+            VALUE "LegalCopyright", "Copyright (C) 2003-2011 Breno de Lima Sarmento\r\n\r\nThis program is free software: you can redistribute it and/or modify\r\nit under the terms of the GNU General Public License as published by\r\nthe Free Software Foundation, either version 3 of the License, or\r\n(at your option) any later version.\r\n\r\nThis program is distributed in the hope that it will be useful,\r\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\r\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\r\nGNU General Public License for more details.\r\n\r\nYou should have received a copy of the GNU General Public License\r\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\0"
+            VALUE "OriginalFilename", "midiedit.exe\0"
+            VALUE "ProductName", "BRELS MIDI Editor\0"
+            VALUE "ProductVersion", "0,0,8,0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        /* The following line should only be modified for localized versions.     */
+        /* It consists of any number of WORD,WORD pairs, with each pair           */
+        /* describing a language,codepage combination supported by the file.      */
+        /*                                                                        */
+        /* For example, a file might have values "0x409,1252" indicating that it  */
+        /* supports English language (0x409) in the Windows ANSI codepage (1252). */
+
+        VALUE "Translation", 0x409, 1252
+
+    END
+END
+
+
+/* From Sindarin in Code::Blocks forums, who had to answer his/her own question. */
+/* http://forums.codeblocks.org/index.php?topic=11128.0 */
+//this will set your .exe icon
+A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "resources\\logo48.ico"

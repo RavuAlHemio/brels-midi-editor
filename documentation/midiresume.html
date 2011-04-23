@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>MidiResume function</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; }</style>
+</head>
+<body>
+<h2>MidiResume</h2>
+<pre>BOOL WINAPI MidiResume
+(
+	HANDLE hSequence, 
+	BOOL Modified
+);</pre>
+<p>This function removes the suspension of a sequence previously done with <a href="midisuspend.html">MidiSuspend</a>. If the sequence was playing before, it will continue to play.</p>
+<h3>Parameters</h3>
+<ul>
+<li><strong>hSequence</strong>: handle of the sequence to be resumed.</li>
+<li><strong>Synchronize</strong>: set it to indicate if the sequence was altered. Generally, it will be always set to <code>TRUE</code></li>
+</ul>
+<h3>Return values</h3>
+<p><code>TRUE</code> if the sequence was resume or <code>FALSE</code> if not. The most likely reason for an error is an invalid sequence handle.</p>
+<h3>Remarks</h3>
+<p>If the sequence was not suspended, <strong>MidiResume</strong> still does synchronization of the events in the sequence, hence use it only when necessary.</p>
+<h3>Example</h3>
+<p>For an example, check <a href="midisuspend.html">MidiSuspend</a>.</p>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

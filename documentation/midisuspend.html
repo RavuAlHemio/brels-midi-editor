@@ -1,0 +1,61 @@
+<html>
+<head>
+	<title>MidiSuspend function</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; }</style>
+</head>
+<body>
+<h2>MidiSuspend</h2>
+<pre>BOOL WINAPI MidiSuspend
+(
+	HANDLE hSequence, 
+	BOOL Synchronize
+);</pre>
+<p>This function suspends a playback operation, if there is one, to let the sequence to be altered then resumed normally.</p>
+<h3>Parameters</h3>
+<ul>
+<li><strong>hSequence</strong>: handle of the sequence to be suspended.</li>
+<li><strong>Synchronize</strong>: indicates whether the sequence will resume playback from the exact time when it has stopped or the sequence position will continue to advance even suspended.</li>
+</ul>
+<h3>Return values</h3>
+<p><code>TRUE</code> if the sequence was suspended or <code>FALSE</code> if not. The most likely reason for an error is an invalid sequence handle.</p>
+<h3>Remarks</h3>
+<p><strong>MidiSuspend</strong> does not silence the sequence. If you want the sequence to be silenced, call <a href="midisilence.html">MidiSilence</a>. After you have done all alterations to the sequence, call <a href="midiresume.html">MidiResume</a> to restore playback or to enable it again. Do not use <strong>MidiSuspend</strong> in situations where <a href="midipause.html">MidiPause</a> would be more adequate.</p>
+<p>The example below adds a tempo change to a sequence.</p>
+<h3>Example</h3>
+<pre>HANDLE Sequence;
+BRELS_MIDI_EVENT Event;
+
+// Opens the sequence
+MidiOpen("test1.mid", DEFAULT_DEVICE, &Sequence);
+
+// Plays
+MidiPlay(Sequence);
+
+// Waits 4 seconds
+while (MidiGet(Sequence, CURRENT_TIME)<4000000) continue;
+
+// Doubles speed
+MidiSuspend(Sequence, FALSE);
+Event.wTag = 0;
+Event.dwTicks = MidiGet(Sequence, CURRENT_TICKS) + 1;
+Event.Event = 0x51; // Tempo
+Event.DataSize = 3;
+Event.lpData = "\x03\xD0\x90"; // 0x03D090 == 250,000 (240 bpm)
+MidiInsertTrackEvents(Sequence, 0, 1, &Event);
+MidiResume(Sequence, FALSE);
+
+// Waits the end of the sequence
+while (MidiGet(Sequence, CURRENT_TICKS)) continue;
+
+// Finishes
+MidiClose(Sequence);</pre>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>

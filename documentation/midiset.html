@@ -1,0 +1,71 @@
+<html>
+<head>
+	<title>MidiSet function</title>
+	<style type="text/css">* {text-decoration: none; border-style: none; } span {width: 30%; vertical-align: top; } table td { border-style: double; border-width: 3px; }</style>
+</head>
+<body>
+<h2>MidiSet</h2>
+<pre>QWORD WINAPI MidiSet
+(
+	HANDLE hSequence, 
+	DWORD dwWhat, 
+	QWORD qwValue
+);</pre>
+<p>This function sets properties of a sequence.</p>
+<h3>Parameters</h3>
+<ul>
+<li><strong>hSequence</strong>: handle of the sequence to set properties</li>
+<li><strong>dwWhat</strong>: constant indicating the property to be set. See remarks below</li>
+<li><strong>qwValue</strong>: new value of the property, cast to a <code>QWORD</code> value</li>
+</ul>
+<h3>Return values</h3>
+<p>Returns the previous value of the property or <code>TRUE</code> if the value is not valid anymore. It returns <code>BRELS_ERROR</code> (0xFFFFFFFFFFFFFFFF) if an error occurred. The reasons for an error are an invalid sequence handle, an invalid property constant or an invalid property value.</p>
+<h3>Remarks</h3>
+<p>The following table lists the properties you can set using <strong>MidiSet</strong>:</p>
+<table>
+<tr><td><strong>Constant</strong></td><td><strong>Property</strong></td></tr>
+<tr><td>BEAT_SIZE</td><td>Sets the size of a beat, in Ticks. Ranges from 1 to 65535.</td></tr>
+<tr><td>CURRENT_TEMPO</td><td>Sets the length of a beat, in microseconds. Ranges from 1 to 16777215</td></tr>
+<tr><td>MIDI_HANDLE</td><td>Sets the midiOut handle used for playback. It will close the currently used device and the function will return <code>TRUE</code></td></tr>
+<tr><td>MIDI_LOOP</td><td>Sets the looping of the sequence. Set to <code>TRUE</code> to repeat the sequence when it ends or <code>FALSE</code> to not repeat</td></tr>
+<tr><td>MIDI_PRECISION</td><td>Sets the playback timer interval, in microseconds. The minimum allowed value is 1000</td></tr>
+<tr><td>CALLBACK_HWND</td><td>Sets the handle of the window which will receive callback messages. Set to <code>NULL</code> to disable callback</td></tr>
+<tr><td>CALLBACK_MESSAGE</td><td>Sets the callback message sent to the window. Use <code>WM_APP+<em>n</em></code></td></tr>
+<tr><td>SOLO_TRACK</td><td>Sets the track that will be played exclusively. Set to <code>NO_SOLO</code> (0xFFFF) to allow all tracks to play again</td></tr>
+<tr><td>CURRENT_TIME</td><td>Sets the current time position of the sequence, in microseconds</td></tr>
+<tr><td>CURRENT_TICKS</td><td>Sets the current tick position of the sequence</td></tr>
+</table>
+<p>Always make the apropriate cast from and to <code>QWORD</code> values when using <strong>MidiSet</strong>.</p>
+<p>The example below sets several properties of a sequence:</p>
+<h3>Example</h3>
+<pre>HANDLE Sequence;
+QWORD qwLength;
+
+// Open the sequence
+MidiOpen("test1.mid", DEFAULT_DEVICE, &Sequence);
+
+// Double the size of the notes
+MidiSet(Sequence, BEAT_SIZE, 8);
+
+// Turn looping on
+MidiSet(Sequence, MIDI_LOOP, TRUE);
+
+// Go to the half of the sequence
+qwLength = MidiGet(Sequence, TIME_COUNT);
+MidiSet(Sequence, CURRENT_TIME, qwLength / 2);
+
+// Twice faster
+MidiSet(Sequence, CURRENT_TEMPO, 250000);
+
+// Play the sequence
+MidiPlay(Sequence);</pre>
+<hr/>
+<h3>Further information</h3>
+<p>Released in November 19th, 2003<br/>
+Updated in April 29th, 2004<br/>
+Property of <strong>Bre</strong>no de <strong>L</strong>ima <strong>S</strong>armento<br/>
+Home page: <a href="http://www27.brinkster.com/brels">http://www27.brinkster.com/brels</a><br/>
+E-mail: <a href="mailto:breno_sarmento@hotmail.com">breno_sarmento@hotmail.com</a><br/>
+ICQ: <a href="http://web.icq.com/whitepages/about_me/1,,,00.html?to=%25U&Uin=78977999">78977999</a> (<img src="http://web.icq.com/whitepages/online?icq=78977999&img=2" />)</p>
+</body>
+</html>
