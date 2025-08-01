@@ -78,7 +78,8 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 	DWORD nEvents;
 	WORD wTracks;
 	BOOL Current = Sequence != NULL;
-	DWORD i, j, k, Delta, Position, Return;
+	DWORD i, j, k, Delta, Return;
+	SIZE_T Position;
 	LPBRELS_MIDI_EVENT lpBuffer;
 	OPENFILENAME ofn;
 	int maxDataSize;
@@ -131,7 +132,7 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 		}
 
 
-	wTracks = MidiGet(decSequence, TRACK_COUNT);
+	wTracks = (WORD) MidiGet(decSequence, TRACK_COUNT);
 
 	strcpy(lpdecstr1, "'\xFF' replaces byte 0x00.\r\n\r\n");
 	Position = strlen(lpdecstr1);
@@ -140,8 +141,8 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 		SetWindowText(decwindow, strcat(gcvt(i * 100.00l / wTracks, 4, lpdecstr2), "%"));
 
 		Delta = 0;
-		nEvents = (DWORD) MidiTrackGet(decSequence, i, EVENT_COUNT);
-		MidiGetTrackEvents(decSequence,i, 0, nEvents-1, MIDI_INDEX, &lpBuffer);
+		nEvents = (DWORD) MidiTrackGet(decSequence, (WORD) i, EVENT_COUNT);
+		MidiGetTrackEvents(decSequence, (WORD) i, 0, nEvents-1, MIDI_INDEX, &lpBuffer);
 
 		strcpy(&lpdecstr1[Position], "Track ");
 		Position+=6;
@@ -274,7 +275,7 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 		DispatchMessage(&decmsg);
 	}
 
-	Return = GetWindowLongPtr(decwindow, GWLP_USERDATA);
+	Return = (DWORD) GetWindowLongPtr(decwindow, GWLP_USERDATA);
 
 	if (!Current)
 		MidiClose(decSequence);

@@ -238,7 +238,7 @@ void GetProgramInformationFromEvent(LPBRELS_MIDI_EVENT lpEvent, int* Channel, in
 
 char* trim(char* src)
 {
-	int start=0, end=strlen(src)-1;
+	SIZE_T start=0, end=strlen(src)-1;
 
 	if (end<1) return src;
 
@@ -392,7 +392,7 @@ void GetProgramInformation(int nTrack, int Position, int* Channel, int* BankHigh
 	LPBRELS_MIDI_EVENT lpEvents;
 	BOOL ProgramChannel = FALSE;
 
-	nEvents = MidiTrackGet(Sequence, nTrack, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, nTrack, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, nTrack, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 
 	if (Channel !=NULL) *Channel  = -1;
@@ -434,7 +434,7 @@ BOOL GetChannelProgramInformation(int Channel, int Position, int* BankHigh, int*
 	for (j=0; j<(int) MidiGet(Sequence, TRACK_COUNT); j++)
 	{
 
-		nEvents = MidiTrackGet(Sequence, j, EVENT_COUNT);
+		nEvents = (int) MidiTrackGet(Sequence, j, EVENT_COUNT);
 		MidiGetTrackEvents(Sequence, j, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 
 		for (i=0; i<nEvents; i++)
@@ -479,7 +479,7 @@ void SplitChannels(void)
 
 	Channel = -1;
 	Tracks = 0;
-	nEvents = MidiTrackGet(Sequence, 0, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, 0, EVENT_COUNT);
 	nLeft = nEvents;
 	MidiGetTrackEvents(Sequence, 0, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	MidiRemoveTrack(Sequence, 0);
@@ -531,14 +531,14 @@ BOOL MetaAction(int Action, int nTrack, int Position, QWORD qwFilter, LPSTR lpDa
 	End = Position;
 	Event.wTag = FALSE;
 	Event.dwTicks = Position;
-	Event.Event = MidiQuery(Sequence, nTrack, MIDI_EVENT, MIDI_FILTER, qwFilter);
+	Event.Event = (BYTE) MidiQuery(Sequence, nTrack, MIDI_EVENT, MIDI_FILTER, qwFilter);
 	Event.DataSize = DataSize;
 	Event.Data.p = (LPBYTE) lpData;
 
 	if (Position==-1)
 	{
 		Start = 0;
-		End = MidiGet(Sequence, TICK_COUNT);
+		End = (int) MidiGet(Sequence, TICK_COUNT);
 		Event.dwTicks = 0;
 	}
 	nFilters = MidiFilterTrackEvents(Sequence, nTrack, Start, End, MIDI_TICKS, qwFilter, &lpFilters);
@@ -548,8 +548,8 @@ BOOL MetaAction(int Action, int nTrack, int Position, QWORD qwFilter, LPSTR lpDa
 		ZeroMemory(lpData, DataSize);
 		if (nFilters)
 		{
-			Event.Data.p = (LPBYTE) (DWORD_PTR) MidiEventGet(Sequence, nTrack, lpFilters[0].qwStart, EVENT_DATA);
-			CopyMemory(lpData, Event.Data.p, MidiEventGet(Sequence, nTrack, lpFilters[0].qwStart, EVENT_DATASIZE));
+			Event.Data.p = (LPBYTE) (DWORD_PTR) MidiEventGet(Sequence, nTrack, (DWORD) lpFilters[0].qwStart, EVENT_DATA);
+			CopyMemory(lpData, Event.Data.p, (SIZE_T) MidiEventGet(Sequence, nTrack, (DWORD) lpFilters[0].qwStart, EVENT_DATASIZE));
 			MidiFreeBuffer(Event.Data.p);
 			Return = TRUE;
 		}
@@ -584,12 +584,12 @@ void ResizeTrack(WORD wTrack, WORD NewBeat, WORD OldBeat)
 
 	Factor = (double) NewBeat / (double) OldBeat;
 
-	nEvents = MidiTrackGet(Sequence, wTrack, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, wTrack, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, wTrack, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	nFilters = MidiFilterTrackEvents(Sequence, wTrack, 0, nEvents-1, MIDI_INDEX, FILTER_NOTES, &lpFilters);
 
 	for (i=0; i<nEvents; i++)
-		lpEvents[i].dwTicks = round(lpEvents[i].dwTicks * Factor);
+		lpEvents[i].dwTicks = (DWORD) round(lpEvents[i].dwTicks * Factor);
 
 	/* Fixes zero-length notes */
 	for (i=0; i<nFilters; i++)
@@ -611,7 +611,7 @@ void Transpose(int X, int Y)
 
 	if (!X && !Y) return;
 
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	nFilters = MidiFilterTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, FILTER_NOTES, &lpFilters);
 	nProgramChanges = MidiFilterTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, FILTER_PROGRAM, &lpProgramChanges);
@@ -679,7 +679,7 @@ void ResizeNote(void)
 
 	if (Selection.right<0) return;
 
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	nFilters = MidiFilterTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, FILTER_NOTES, &lpFilters);
 
@@ -732,7 +732,7 @@ void UpdateController(int Y)
 
 	MidiSuspend(Sequence, TRUE);
 	MidiSilence(Sequence);
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	MidiRemoveTrack(Sequence, Track);
 	MidiInsertTrack(Sequence, Track);
@@ -835,10 +835,10 @@ void PlaceNote(int Length)
 	GetProgramInformation(Track, Selection.right, &Channel, NULL, NULL, NULL);
 	if (Channel==-1) Channel=0;
 	Events[0].Event = 0x90 | Channel;
-	Events[0].Data.a[0] = Selection.bottom;
+	Events[0].Data.a[0] = (BYTE) Selection.bottom;
 	Events[0].Data.a[1] = 64;
 	Events[1].Event = 0x90 | Channel;
-	Events[1].Data.a[0] = Selection.bottom;
+	Events[1].Data.a[0] = (BYTE) Selection.bottom;
 	MidiInsertTrackEvents(Sequence, Track, 2, (LPBRELS_MIDI_EVENT) &Events);
 	MidiResume(Sequence, TRUE);
 	AdjustScroll();
@@ -875,7 +875,7 @@ void PlaceMeta(void)
 			MidiSuspend(Sequence, TRUE);
 			MidiSilence(Sequence);
 			MetaAction(META_DELETE, Track, Selection.left , qwFilter, lpstr1, 256);
-			MetaAction(META_INSERT, Track, Selection.right, qwFilter, lpstr1, strlen(lpstr1));
+			MetaAction(META_INSERT, Track, Selection.right, qwFilter, lpstr1, (int) strlen(lpstr1));
 			MidiResume(Sequence, TRUE);
 			AdjustScroll();
 		}
@@ -914,10 +914,10 @@ void RemoveProgram(void)
 	LPBYTE lpData;
 
 	/* Removes every bank select controller related to this program change */
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	for (i=(nEvents-1); i>=0; i--)
 	{
-		Ticks = MidiEventGet(Sequence, Track, i, EVENT_TICKS);
+		Ticks = (int) MidiEventGet(Sequence, Track, i, EVENT_TICKS);
 		if (Ticks>Selection.left) continue;
 		Event = MidiEventGet(Sequence, Track, i, EVENT_EVENT) & 0xF0;
 		if (Event==0xC0)
@@ -960,9 +960,9 @@ LRESULT CALLBACK ProgramProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		switch (LOWORD(wParam))
 		{
 		case IDOK:
-			Channel = SendMessage(GetDlgItem(hwnd, 0xFFFC), CB_GETCURSEL, 0, 0);
-			Bank    = SendMessage(GetDlgItem(hwnd, 0xFFFD), CB_GETCURSEL, 0, 0);
-			Program = SendMessage(GetDlgItem(hwnd, 0xFFFE), CB_GETCURSEL, 0, 0);
+			Channel = (int) SendMessage(GetDlgItem(hwnd, 0xFFFC), CB_GETCURSEL, 0, 0);
+			Bank    = (int) SendMessage(GetDlgItem(hwnd, 0xFFFD), CB_GETCURSEL, 0, 0);
+			Program = (int) SendMessage(GetDlgItem(hwnd, 0xFFFE), CB_GETCURSEL, 0, 0);
 			if ((Channel==-1) || (Program==-1) || (Bank==-1)) break;
 			MidiSuspend(Sequence, TRUE);
 			MidiSilence(Sequence);
@@ -995,8 +995,8 @@ LRESULT CALLBACK ProgramProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDCANCEL:
 			SendMessage(hwnd, WM_CLOSE, 0, 0);
 			break;
-		case 0xFFFC: if (HIWORD(wParam)==CBN_SELCHANGE)	ChannelList(hwnd, SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0)); break;
-		case 0xFFFD: if (HIWORD(wParam)==CBN_SELCHANGE)	ProgramList(hwnd, SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0)); break;
+		case 0xFFFC: if (HIWORD(wParam)==CBN_SELCHANGE)	ChannelList(hwnd, (int) SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0)); break;
+		case 0xFFFD: if (HIWORD(wParam)==CBN_SELCHANGE)	ProgramList(hwnd, (int) SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0)); break;
 		case 0xFFFF:
 			MidiSuspend(Sequence, TRUE);
 			MidiSilence(Sequence);
@@ -1075,7 +1075,7 @@ void ProgramList(HWND hwnd, int Bank)
 {
 	int i, j;
 
-	j = SendMessage(GetDlgItem(hwnd, 0xFFFE), CB_GETCURSEL, 0, 0);
+	j = (int) SendMessage(GetDlgItem(hwnd, 0xFFFE), CB_GETCURSEL, 0, 0);
 	SendMessage(GetDlgItem(hwnd, 0xFFFE), CB_RESETCONTENT, 0, 0);
 	if (Bank==-1) Bank=0;
 	for (i=0; i<128; i++)
@@ -1185,7 +1185,7 @@ LRESULT CALLBACK TempoProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			MidiSuspend(Sequence, TRUE);
 			MidiSilence(Sequence);
 			MetaAction(META_DELETE, Track, Selection.left, FILTER_TEMPO, NULL, 0);
-			i = SendMessage(GetDlgItem(hwnd, 0xFFFE), UDM_GETPOS32, 0, 0);
+			i = (int) SendMessage(GetDlgItem(hwnd, 0xFFFE), UDM_GETPOS32, 0, 0);
 			lpstr1[0] = i >> 16;
 			lpstr1[1] = (i >> 8) & 0xFF;
 			lpstr1[2] = i & 0xFF;
@@ -1284,7 +1284,7 @@ void CopyEvents(void)
 	int i, nEvents, Count;
 	LPBRELS_MIDI_EVENT lpEvents;
 
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	Count = 0;
 	for (i=0; i<nEvents; i++) if (lpEvents[i].wTag) Count++;
@@ -1310,7 +1310,7 @@ void DeleteEvents(void)
 
 	MidiSuspend(Sequence, TRUE);
 	MidiSilence(Sequence);
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	lpKept = (LPBRELS_MIDI_EVENT) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, nEvents * sizeof(BRELS_MIDI_EVENT));
 	j = 0;
@@ -1338,7 +1338,7 @@ void PasteEvents(void)
 		/* Deselects events */
 		for (i=0; i<(int) MidiTrackGet(Sequence, Track, EVENT_COUNT); i++)
 			MidiEventSet(Sequence, Track, i, EVENT_TAG, FALSE);
-		Base = MidiGet(Sequence, CURRENT_TICKS);
+		Base = (int) MidiGet(Sequence, CURRENT_TICKS);
 		GetProgramInformation(Track, Base, &ChannelNum, NULL, NULL, NULL);
 		lpEvents = (LPBRELS_MIDI_EVENT) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(BRELS_MIDI_EVENT)*nClipboard);
 		CopyMemory(lpEvents, Clipboard, nClipboard*sizeof(BRELS_MIDI_EVENT));
@@ -1346,9 +1346,9 @@ void PasteEvents(void)
 		{
 			int type = lpEvents[i].Event & 0xF0;
 			if ((type)==0x80)
-				lpEvents[i].dwTicks = Base + ceil(((Clipboard[i].dwTicks-Clipboard[0].dwTicks) * (double) Beat) / ClipboardBeat);
+				lpEvents[i].dwTicks = (DWORD)(Base + ceil(((Clipboard[i].dwTicks-Clipboard[0].dwTicks) * (double) Beat) / ClipboardBeat));
 			else
-				lpEvents[i].dwTicks = Base + floor(((Clipboard[i].dwTicks-Clipboard[0].dwTicks) * (double) Beat) / ClipboardBeat);
+				lpEvents[i].dwTicks = (DWORD)(Base + floor(((Clipboard[i].dwTicks-Clipboard[0].dwTicks) * (double) Beat) / ClipboardBeat));
 		}
 		MidiInsertTrackEvents(Sequence, Track, nClipboard, lpEvents);
 		MidiCleanEvents(nClipboard, lpEvents);
@@ -1364,7 +1364,7 @@ void SelectAllEvents(void)
 	int i, nEvents;
 	LPBRELS_MIDI_EVENT lpEvents;
 
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	for (i=0; i<nEvents; i++)
 		MidiEventSet(Sequence, Track, i, EVENT_TAG, ((lpEvents[i].Event>=0x80) && (lpEvents[i].Event<=0x9F)));
@@ -1388,7 +1388,7 @@ int SelectEvents(void)
 	else
 		{ left = Selection.left; right = Selection.right; }
 
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	nFilters = MidiFilterTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, FILTER_NOTES, &lpFilters);
 
@@ -1412,8 +1412,8 @@ int SelectEvents(void)
 				NewMovement = RESIZING;
 			else
 				NewMovement = TRANSPOSING;
-			MidiEventSet(Sequence, Track, lpFilters[i].qwStart, EVENT_TAG, !Deselect);
-			MidiEventSet(Sequence, Track, lpFilters[i].qwEnd  , EVENT_TAG, !Deselect);
+			MidiEventSet(Sequence, Track, (DWORD) lpFilters[i].qwStart, EVENT_TAG, !Deselect);
+			MidiEventSet(Sequence, Track, (DWORD) lpFilters[i].qwEnd  , EVENT_TAG, !Deselect);
 			if (lpEvents[lpFilters[i].qwStart].wTag)
 				Moving = TRUE;
 		}
@@ -1428,14 +1428,14 @@ int SelectEvents(void)
 		Byte1  = lpEvents[lpFilters[i].qwStart].Data.a[0];
 		if ((Ticks1>=left) && (Ticks2<=right) && (Byte1<=top) && (Byte1>=bottom))
 		{
-			MidiEventSet(Sequence, Track, lpFilters[i].qwStart, EVENT_TAG, !Deselect);
-			MidiEventSet(Sequence, Track, lpFilters[i].qwEnd  , EVENT_TAG, !Deselect);
+			MidiEventSet(Sequence, Track, (DWORD) lpFilters[i].qwStart, EVENT_TAG, !Deselect);
+			MidiEventSet(Sequence, Track, (DWORD) lpFilters[i].qwEnd  , EVENT_TAG, !Deselect);
 		}
 		else
 		if (!MultiSelect && !Deselect && (i!=Selected))
 		{
-			MidiEventSet(Sequence, Track, lpFilters[i].qwStart, EVENT_TAG, FALSE);
-			MidiEventSet(Sequence, Track, lpFilters[i].qwEnd  , EVENT_TAG, FALSE);
+			MidiEventSet(Sequence, Track, (DWORD) lpFilters[i].qwStart, EVENT_TAG, FALSE);
+			MidiEventSet(Sequence, Track, (DWORD) lpFilters[i].qwEnd  , EVENT_TAG, FALSE);
 		}
 	}
 
@@ -1449,7 +1449,7 @@ void ChangeDevice(void)
 {
 	HMIDIOUT hmo;
 
-	Device = SendMessage(GetDlgItem(window, ID_DEVICE), CB_GETCURSEL, 0, 0) - 1;
+	Device = (DWORD) SendMessage(GetDlgItem(window, ID_DEVICE), CB_GETCURSEL, 0, 0) - 1;
 	MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD_PTR) NULL);
 	midiOutOpen(&hmo, Device, (DWORD_PTR) NULL, (DWORD_PTR) NULL, (DWORD) CALLBACK_NULL);
 	MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD_PTR) hmo);
@@ -1468,17 +1468,17 @@ void ChangeBeat(void)
 	MidiSilence(Sequence);
 	Preserve = (GetAsyncKeyState(VK_SHIFT) >> 15)==0;
 	OldBeat = Beat;
-	NewBeat = (SendMessage(GetDlgItem(window, ID_BEAT), CB_GETCURSEL, 0, 0)+1) << 4;
+	NewBeat = ((WORD)(SendMessage(GetDlgItem(window, ID_BEAT), CB_GETCURSEL, 0, 0)+1)) << 4;
 	Beat = NewBeat;
-	dwTicks = MidiGet(Sequence, CURRENT_TICKS);
+	dwTicks = (DWORD) MidiGet(Sequence, CURRENT_TICKS);
 	MidiSet(Sequence, BEAT_SIZE, Beat);
-	Tracks = MidiGet(Sequence, TRACK_COUNT);
+	Tracks = (int) MidiGet(Sequence, TRACK_COUNT);
 	Factor = (double) NewBeat / (double) OldBeat;
 
 	if (Preserve)
 	{
-		CurrentPosition = CurrentPosition * Factor;
-		dwTicks = dwTicks * Factor;
+		CurrentPosition = (int)(CurrentPosition * Factor);
+		dwTicks = (DWORD)(dwTicks * Factor);
 		for (j=0; j<Tracks; j++) ResizeTrack(j, NewBeat, OldBeat);
 	}
 
@@ -1496,13 +1496,13 @@ void InsertTrack(void)
 
 	MidiSuspend(Sequence, TRUE);
 	MidiSilence(Sequence);
-	Track = MidiGet(Sequence, TRACK_COUNT);
+	Track = (int) MidiGet(Sequence, TRACK_COUNT);
 	MidiInsertTrack(Sequence, Track);
 	ZeroMemory(&Events, sizeof(Events));
 	strcpy(lpstr1, Strings[22]);
 	strcat(lpstr1, itoa(Track+1, lpstr2, 10));
 	Events[0].Event = 0x03;
-	Events[0].DataSize = strlen(lpstr1);
+	Events[0].DataSize = (BYTE) strlen(lpstr1);
 	Events[0].Data.p = (LPBYTE) lpstr1;
 	Events[1].Event = 0x00;
 	Events[1].DataSize = 2;
@@ -1530,7 +1530,7 @@ void RemoveTrack(void)
 	MidiSuspend(Sequence, TRUE);
 	MidiSilence(Sequence);
 	MidiRemoveTrack(Sequence, Track);
-	wTracks = MidiGet(Sequence, TRACK_COUNT);
+	wTracks = (WORD) MidiGet(Sequence, TRACK_COUNT);
 	if (Track>=wTracks) Track = wTracks -1;
 	RenumberTracks();
 	MidiResume(Sequence, TRUE);
@@ -1544,11 +1544,11 @@ void Callback(void)
 
 	if (MidiGet(Sequence, MIDI_STATUS)==MIDI_PLAY)
 	{
-		dwTicks = abs(CurrentPosition-MidiGet(Sequence, CURRENT_TICKS));
+		dwTicks = abs(CurrentPosition-((int) MidiGet(Sequence, CURRENT_TICKS)));
 
 		if ((((int) dwTicks)>=PageSize) && (((int) dwTicks)<=(2*PageSize)) && (!Positioning))
 		{
-			CurrentPosition = MidiGet(Sequence, CURRENT_TICKS);
+			CurrentPosition = (int) MidiGet(Sequence, CURRENT_TICKS);
 			SetScrollPos(GetDlgItem(window, ID_POSITION), SB_CTL, CurrentPosition, TRUE);
 		}
 
@@ -1598,7 +1598,7 @@ BOOL FileNew(void)
 		Sequence = NewSequence;
 		midiOutOpen(&hmo, Device, (DWORD_PTR) NULL, (DWORD_PTR) NULL, (DWORD) CALLBACK_NULL);
 		MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD_PTR) hmo);
-		Beat = MidiGet(Sequence, BEAT_SIZE);
+		Beat = (int) MidiGet(Sequence, BEAT_SIZE);
 		Zoom = 100;
 		Track = 0;
 		Controller = -2;
@@ -1611,9 +1611,9 @@ BOOL FileNew(void)
 		MidiInsertTrack(Sequence, 0);
 		Events[0].Data.p = (LPBYTE) &trackSignature[0];
 		Events[1].Data.p = (LPBYTE) &Strings[30];
-		Events[1].DataSize = strlen((const char*) Events[1].Data.p);
+		Events[1].DataSize = (BYTE) strlen((const char*) Events[1].Data.p);
 		Events[2].Data.p = (LPBYTE) &Strings[31];
-		Events[2].DataSize = strlen((const char*) Events[2].Data.p);
+		Events[2].DataSize = (BYTE) strlen((const char*) Events[2].Data.p);
 		Events[3].Data.p = (LPBYTE) &defaultTempo[0];
 		Events[4].Data.a[0] = 0x00;
 		Events[4].Data.a[1] = 0x79;
@@ -1686,7 +1686,7 @@ BOOL FileOpen(void)
 			/* You can use it if you wish to */
 			/* MidiSet(Sequence, CALLBACK_HWND, (QWORD) window); */
 			/* MidiSet(Sequence, CALLBACK_MESSAGE, (QWORD) WM_CALLBACK); */
-			Beat = MidiGet(Sequence, BEAT_SIZE);
+			Beat = (int) MidiGet(Sequence, BEAT_SIZE);
 			Saved = TRUE;
 			PlayButtonsAdjusted = FALSE;
 			Zoom = 100;
@@ -1860,8 +1860,8 @@ void WindowMouseMove(WPARAM wParam, LPARAM lParam)
 	RButton = (wParam & MK_RBUTTON) == MK_RBUTTON;
 	LButton  = (wParam & MK_LBUTTON) == MK_LBUTTON;
 	MouseX = LOWORD(lParam); MouseY = HIWORD(lParam);
-	Selection.right  = CurrentPosition + (MouseX - Notes.left) / TickWidth;
-	Selection.bottom = LastNote - floor((MouseY - Notes.top) / KeyHeight);
+	Selection.right  = (LONG)(CurrentPosition + (MouseX - Notes.left) / TickWidth);
+	Selection.bottom = (LONG)(LastNote - floor((MouseY - Notes.top) / KeyHeight));
 
 	if (!LButton) Movement = 0;
 
@@ -1882,9 +1882,9 @@ void WindowMouseMove(WPARAM wParam, LPARAM lParam)
 			SelectEvents();
 		/*if (Movement==RESIZING) */
 		/*	if (Selection.bottom!=Selection.top) Movement=TRANSPOSING; */
-		Tick = BeatWidth / TickWidth / 16;
+		Tick = (int)(BeatWidth / TickWidth / 16);
 		NewPosition = CurrentPosition;
-		tickCount = MidiGet(Sequence, TICK_COUNT);
+		tickCount = (int) MidiGet(Sequence, TICK_COUNT);
 		if (MouseX<Notes.left) NewPosition -= Tick;
 		if (MouseX>(Notes.right-8)) NewPosition += Tick;
 		if ((NewPosition!=CurrentPosition) && (NewPosition>=0))
@@ -1958,8 +1958,8 @@ void WindowLButtonUp(WPARAM wParam, LPARAM lParam)
 void WindowLButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	CalculateMeasures();
-	Selection.left   = CurrentPosition + ((LOWORD(lParam)-Notes.left) / TickWidth);
-	Selection.top    = LastNote - floor((HIWORD(lParam)-Piano.top) / KeyHeight);
+	Selection.left   = (LONG)(CurrentPosition + ((LOWORD(lParam)-Notes.left) / TickWidth));
+	Selection.top    = (LONG)(LastNote - floor((HIWORD(lParam)-Piano.top) / KeyHeight));
 
 	switch (GetArea(wParam, lParam))
 	{
@@ -2009,8 +2009,8 @@ void WindowRButtonDown(WPARAM wParam, LPARAM lParam)
 {
 	InController=FALSE;
 	CalculateMeasures();
-	Selection.left   = CurrentPosition + ((LOWORD(lParam)-Notes.left) / TickWidth);
-	Selection.top    = LastNote - floor((HIWORD(lParam)-Piano.top) / KeyHeight);
+	Selection.left   = (LONG)(CurrentPosition + ((LOWORD(lParam)-Notes.left) / TickWidth));
+	Selection.top    = (LONG)(LastNote - floor((HIWORD(lParam)-Piano.top) / KeyHeight));
 
 	switch (GetArea(wParam, lParam))
 	{
@@ -2068,7 +2068,7 @@ void KeyDown(WPARAM wParam, LPARAM lParam)
 	default       :
 		if ((wParam>='0') && (wParam<='9'))
 		{
-			CurrentNote = 127 - (wParam-'0') * 12;
+			CurrentNote = (int)(127 - (wParam-'0') * 12);
 			SetScrollPos(GetDlgItem(window, ID_NOTE), SB_CTL, CurrentNote, TRUE);
 		}
 		else
@@ -2125,10 +2125,10 @@ void SilentPiano(void)
 void CalculateMeasures(void)
 {
 	TickWidth = BeatWidth * Zoom / (100 * Beat);
-	PageSize = (Notes.right - Notes.left) / TickWidth;
+	PageSize = (int)((Notes.right - Notes.left) / TickWidth);
 	KeyHeight = KeyBaseHeight * Zoom / 100;
-	FirstNote = (127-CurrentNote) - (Controllers.bottom-Controllers.top) / KeyHeight - (Notes.bottom-Notes.top) / (2*KeyHeight);
-	LastNote = (127-CurrentNote) + (Piano.bottom-Piano.top) / KeyHeight - (Controllers.bottom-Controllers.top) / KeyHeight - (Notes.bottom-Notes.top) / (2*KeyHeight);
+	FirstNote = (int)((127-CurrentNote) - (Controllers.bottom-Controllers.top) / KeyHeight - (Notes.bottom-Notes.top) / (2*KeyHeight));
+	LastNote = (int)((127-CurrentNote) + (Piano.bottom-Piano.top) / KeyHeight - (Controllers.bottom-Controllers.top) / KeyHeight - (Notes.bottom-Notes.top) / (2*KeyHeight));
 	OffsetX = Selection.right - Selection.left;
 	OffsetY = Selection.bottom - Selection.top;
 }
@@ -2176,7 +2176,7 @@ void CheckCursor(void)
 	if (Movement == TRANSPOSING) { CursorSet = SIZEALL; return; }
 	if (Movement == RESIZING   ) { CursorSet = SIZEWE ; return; }
 
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	nFilters = MidiFilterTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, FILTER_NOTES, &lpFilters);
 
@@ -2231,8 +2231,8 @@ void DoRedraw(void)
 
 	CalculateMeasures();
 
-	Ticks = MidiGet(Sequence, CURRENT_TICKS);
-	EndOfTrack = MidiGet(Sequence, TICK_COUNT);
+	Ticks = (int) MidiGet(Sequence, CURRENT_TICKS);
+	EndOfTrack = (int) MidiGet(Sequence, TICK_COUNT);
 
 	/* Backgrounds */
 	SelectObject(buffer, blackp);
@@ -2246,14 +2246,14 @@ void DoRedraw(void)
 	SetTextAlign(buffer, TA_CENTER);
 	SetBkMode(buffer, OPAQUE);
 	SetTextColor(buffer, 0x000000);
-	Interval = BeatWidth / TickWidth;
+	Interval = (int)(BeatWidth / TickWidth);
 	Last = -2*Interval;
 
 	for (i=CurrentPosition-Interval; i<=(CurrentPosition+PageSize+Interval); i++)
 	if (i>=0)
 	{
-		Start = Notes.left + (i-CurrentPosition)*TickWidth;
-		if (((i % Beat) == 0) && (abs((i-Last)*TickWidth) >= BeatWidth))
+		Start = (int)(Notes.left + (i-CurrentPosition)*TickWidth);
+		if (((i % Beat) == 0) && (abs((int)((i-Last)*TickWidth)) >= BeatWidth))
 		{
 			Last = i;
 
@@ -2262,7 +2262,7 @@ void DoRedraw(void)
 			LineTo(buffer, Start, Ruler.bottom);
 
 			qwTime = MidiQuery(Sequence, 0, MIDI_TIME, MIDI_TICKS, i);
-			Min = qwTime / 60000000;
+			Min = (int)(qwTime / 60000000);
 			Sec = (qwTime / 1000000) % 60;
 			Ms = (qwTime % 1000000) / 1000;
 			strcpy(lpstr1, "");
@@ -2275,7 +2275,7 @@ void DoRedraw(void)
 			if (Ms<100) strcat(lpstr1, "0");
 			if (Ms<10) strcat(lpstr1, "0");
 			strcat(lpstr1, itoa(Ms, lpstr2, 10));
-			TextOut(buffer, Start, Ruler.top + 4, lpstr1, strlen(lpstr1));
+			TextOut(buffer, Start, Ruler.top + 4, lpstr1, (int) strlen(lpstr1));
 
 		}
 
@@ -2301,11 +2301,11 @@ void DoRedraw(void)
 
 	/* End of track line */
 	if ((EndOfTrack>=CurrentPosition) && (EndOfTrack<=(CurrentPosition+PageSize)))
-		Rectangle(buffer, Notes.left + (EndOfTrack-CurrentPosition)*TickWidth-1, Notes.top, Notes.left + (EndOfTrack-CurrentPosition)*TickWidth+1, Notes.bottom);
+		Rectangle(buffer, (int)(Notes.left + (EndOfTrack-CurrentPosition)*TickWidth-1), Notes.top, (int)(Notes.left + (EndOfTrack-CurrentPosition)*TickWidth+1), Notes.bottom);
 
 	/* Bar event */
 	if (Movement==DRAGGING) Mask = ILD_SELECTED; else Mask = ILD_NORMAL;
-	ImageList_Draw(imagelist, Meta, buffer, Notes.left + (Selection.right-CurrentPosition)*TickWidth - 4, Bar.top + 2, Mask);
+	ImageList_Draw(imagelist, Meta, buffer, (int)(Notes.left + (Selection.right-CurrentPosition)*TickWidth - 4), Bar.top + 2, Mask);
 
 	/* Notes, controllers and meta-events */
 	Last = 0;
@@ -2316,8 +2316,8 @@ void DoRedraw(void)
 		CurrentController = ControllerValue;
 	else
 		CurrentController = -1;
-	Limit = CurrentPosition + PageSize + GetSystemMetrics(SM_CXVSCROLL) / TickWidth;
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	Limit = (int)(CurrentPosition + PageSize + GetSystemMetrics(SM_CXVSCROLL) / TickWidth);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	nFilters = MidiFilterTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, FILTER_ALL | FILTER_NOTES | FILTER_TEMPO, &lpFilters);
 
@@ -2347,21 +2347,21 @@ void DoRedraw(void)
 		switch (qwFilter)
 		{
 		case FILTER_NOTES:
-			Block1.top = Notes.top + (LastNote-Byte1) * KeyHeight;
-			Block1.bottom = Block1.top + KeyHeight;
+			Block1.top = (LONG)(Notes.top + (LastNote-Byte1) * KeyHeight);
+			Block1.bottom = (LONG)(Block1.top + KeyHeight);
 			if ((Block1.top>=Notes.top) && (Block1.bottom<=(Notes.bottom+4)))
 			{
 				DrawBlock1 = TRUE;
-				Block1.left = Notes.left + (Start-CurrentPosition)*TickWidth;
-				Block1.right = Notes.left + (End-CurrentPosition)*TickWidth;
+				Block1.left = (LONG)(Notes.left + (Start-CurrentPosition)*TickWidth);
+				Block1.right = (LONG)(Notes.left + (End-CurrentPosition)*TickWidth);
 			}
 			if (Controller==-2)
 			{
 				DrawBlock2 = TRUE;
 				Block2.top = Controllers.top + 127-Byte2;
 				Block2.bottom = Controllers.bottom;
-				Block2.left = Notes.left + (Start-CurrentPosition)*TickWidth;
-				Block2.right = Block2.left + Beat * TickWidth / 16 + 1;
+				Block2.left = (LONG)(Notes.left + (Start-CurrentPosition)*TickWidth);
+				Block2.right = (LONG)(Block2.left + Beat * TickWidth / 16 + 1);
 			}
 			break;
 		case FILTER_CONTROLLER:
@@ -2376,8 +2376,8 @@ void DoRedraw(void)
 				DrawBlock2 = TRUE;
 				Block2.top = Controllers.top + 127-Byte2;
 				Block2.bottom = Controllers.bottom;
-				Block2.left = Notes.left + (Start-CurrentPosition)*TickWidth;
-				Block2.right = Block2.left + Beat * TickWidth / 16 + 1;
+				Block2.left = (LONG)(Notes.left + (Start-CurrentPosition)*TickWidth);
+				Block2.right = (LONG)(Block2.left + Beat * TickWidth / 16 + 1);
 			}
 			break;
 		case FILTER_PITCHWHEEL:
@@ -2386,8 +2386,8 @@ void DoRedraw(void)
 				DrawBlock2 = TRUE;
 				Block2.top = Controllers.top + 127 - (Byte1 | (Byte2 << 7)) * 127 / 0x3FFF;
 				Block2.bottom = Controllers.bottom;
-				Block2.left = Notes.left + (Start-CurrentPosition)*TickWidth;
-				Block2.right = Block2.left + Beat * TickWidth / 16 + 1;
+				Block2.left = (LONG)(Notes.left + (Start-CurrentPosition)*TickWidth);
+				Block2.right = (LONG)(Block2.left + Beat * TickWidth / 16 + 1);
 			}
 			break;
 		case FILTER_PROGRAM:
@@ -2482,8 +2482,8 @@ void DoRedraw(void)
 
 		if (Long)
 		{
-			GetTextExtentPoint32(buffer, lpstr1, strlen(lpstr1), &size);
-			Length = 1 + size.cx / TickWidth;
+			GetTextExtentPoint32(buffer, lpstr1, (int) strlen(lpstr1), &size);
+			Length = (int)(1 + size.cx / TickWidth);
 		}
 		else Length = lpEvents[lpFilters[i].qwEnd].dwTicks - lpEvents[lpFilters[i].qwStart].dwTicks;
 		End = Start + Length;
@@ -2493,7 +2493,7 @@ void DoRedraw(void)
 			if (Start<Last) Rows++; else Rows = 0;
 			if (End > Last) Last = End;
 			if ((Notes.top + Rows*11)<Notes.bottom)
-				TextOut(buffer, Notes.left + (Start-CurrentPosition)*TickWidth, Notes.top + Rows*11, lpstr1, strlen(lpstr1));
+				TextOut(buffer, (int)(Notes.left + (Start-CurrentPosition)*TickWidth), Notes.top + Rows*11, lpstr1, (int)strlen(lpstr1));
 		}
 		if (DrawBlock1)
 		{
@@ -2513,9 +2513,9 @@ void DoRedraw(void)
 				if ((Movement==RESIZING) && (Byte1==Selection.top) && ((Start==Selection.left) || (End==Selection.left)))
 				{
 					if (Start==Selection.left)
-						left += OffsetX * TickWidth;
+						left += (int)(OffsetX * TickWidth);
 					if (End==Selection.left)
-						right += OffsetX * TickWidth;
+						right += (int)(OffsetX * TickWidth);
 					if (((Start==Selection.left) && (Start>=-OffsetX)) || ((End==Selection.left) && (End>=-OffsetX)))
 						SelectObject(buffer, dottedp);
 					else
@@ -2526,10 +2526,10 @@ void DoRedraw(void)
 				}
 				if (Movement==TRANSPOSING)
 				{
-					left += OffsetX*TickWidth;
-					right += OffsetX*TickWidth;
-					top -= OffsetY*KeyHeight;
-					bottom -= OffsetY*KeyHeight;
+					left += (int)(OffsetX*TickWidth);
+					right += (int)(OffsetX*TickWidth);
+					top -= (int)(OffsetY*KeyHeight);
+					bottom -= (int)(OffsetY*KeyHeight);
 					if (((Start+OffsetX)>=0) && ((End+OffsetX)>=0) && ((Byte1+OffsetY)>=0) && ((Byte1+OffsetY)<=127))
 						SelectObject(buffer, dottedp);
 					else
@@ -2553,14 +2553,14 @@ void DoRedraw(void)
 		}
 		if (Icon!=-1)
 			if ((Start!=Selection.left) || (Icon!=Meta) || (Movement!=DRAGGING))
-				ImageList_Draw(imagelist, Icon, buffer, Notes.left + (Start-CurrentPosition)*TickWidth - 4, Bar.top+2, Mask);
+				ImageList_Draw(imagelist, Icon, buffer, (int)(Notes.left + (Start-CurrentPosition)*TickWidth - 4), Bar.top+2, Mask);
 	}
 
 	MidiCleanEvents(nEvents, lpEvents);
 	MidiFreeBuffer(lpFilters);
 
 	/* Marks current playback position */
-	i = Notes.left + (Ticks - CurrentPosition)*TickWidth;
+	i = (int)(Notes.left + (Ticks - CurrentPosition)*TickWidth);
 	if ((i>=Notes.left) && (i<=Notes.right))
 	{
 		SelectObject(buffer, redp);
@@ -2572,8 +2572,8 @@ void DoRedraw(void)
 	if (((Selection.right-CurrentPosition)*TickWidth)>=0)
 	{
 		SelectObject(buffer, greenp);
-		MoveToEx(buffer, Notes.left + (Selection.right-CurrentPosition)*TickWidth, Notes.top + 1, NULL);
-		LineTo(buffer, Notes.left + (Selection.right-CurrentPosition)*TickWidth, Notes.bottom - 1);
+		MoveToEx(buffer, (int)(Notes.left + (Selection.right-CurrentPosition)*TickWidth), Notes.top + 1, NULL);
+		LineTo(buffer, (int)(Notes.left + (Selection.right-CurrentPosition)*TickWidth), Notes.bottom - 1);
 	}
 
 	/* Selection marker */
@@ -2581,13 +2581,13 @@ void DoRedraw(void)
 	{
 		SelectObject(buffer, dottedp);
 		SelectObject(buffer, hollow);
-		left   = Notes.left + (Selection.left - CurrentPosition)*TickWidth,
-		top    = Notes.top + (LastNote - Selection.top) * KeyHeight;
-		right  = Notes.left + (Selection.right - CurrentPosition)*TickWidth,
-		bottom = Notes.top + (LastNote - Selection.bottom) * KeyHeight;
+		left   = (int)(Notes.left + (Selection.left - CurrentPosition)*TickWidth);
+		top    = (int)(Notes.top + (LastNote - Selection.top) * KeyHeight);
+		right  = (int)(Notes.left + (Selection.right - CurrentPosition)*TickWidth);
+		bottom = (int)(Notes.top + (LastNote - Selection.bottom) * KeyHeight);
 		if (top>bottom) { i = top; top = bottom; bottom = i; }
 		if (left>right) { i = left; left = right; right = i; }
-		bottom += KeyHeight;
+		bottom += (int) KeyHeight;
 		if (top<=Notes.top) top = Notes.top;
 		if (bottom>=Notes.bottom) bottom = Notes.bottom;
 		if (left<=Notes.left) left = Notes.left - 1;
@@ -2600,10 +2600,10 @@ void DoRedraw(void)
 	{
 		SelectObject(buffer, dottedp);
 		SelectObject(buffer, hollow);
-		left = Notes.left + (Selection.right-CurrentPosition)*TickWidth;
-		top = Notes.top + (LastNote - Selection.bottom) * KeyHeight;
-		right = left + ((Beat << 3) >> (Mode-ID_0)) * TickWidth;
-		bottom = top + KeyHeight;
+		left = (int)(Notes.left + (Selection.right-CurrentPosition)*TickWidth);
+		top = (int)(Notes.top + (LastNote - Selection.bottom) * KeyHeight);
+		right = (int)(left + ((Beat << 3) >> (Mode-ID_0)) * TickWidth);
+		bottom = (int)(top + KeyHeight);
 		if ((top>=Notes.top) && (bottom<=Notes.bottom))
 			Rectangle(buffer, left, top, right, bottom);
 	}
@@ -2624,11 +2624,11 @@ void DoRedraw(void)
 			SelectObject(buffer, black);
 		else
 			SelectObject(buffer, white);
-		Rectangle(buffer, Piano.left, Piano.top + (LastNote-i)*KeyHeight, Piano.right, Piano.top + (LastNote-i+1)*KeyHeight + 1);
+		Rectangle(buffer, Piano.left, (int)(Piano.top + (LastNote-i)*KeyHeight), Piano.right, (int)(Piano.top + (LastNote-i+1)*KeyHeight + 1));
 		if (Key==0)
 		{
 			KeyText(i, lpstr1);
-			TextOut(buffer, 50, Piano.top + (LastNote-i)*KeyHeight, lpstr1, strlen(lpstr1));
+			TextOut(buffer, 50, (int)(Piano.top + (LastNote-i)*KeyHeight), lpstr1, (int) strlen(lpstr1));
 		}
 	}
 
@@ -2636,7 +2636,7 @@ void DoRedraw(void)
 	if ((Selection.bottom>=0) && (Selection.bottom<=127) && ((LastNote-Selection.bottom)>=0))
 	{
 		KeyText(Selection.bottom, lpstr1);
-		TextOut(buffer, 50, Piano.top + (LastNote - Selection.bottom) *KeyHeight, lpstr1, strlen(lpstr1));
+		TextOut(buffer, 50, (int)(Piano.top + (LastNote - Selection.bottom) *KeyHeight), lpstr1, (int) strlen(lpstr1));
 	}
 
 
@@ -2646,18 +2646,18 @@ void DoRedraw(void)
 	if (CurrentController!=-1)
 	{
 		itoa(CurrentController, lpstr1,10);
-		GetTextExtentPoint32(hdc, lpstr1, strlen(lpstr1), &size);
+		GetTextExtentPoint32(hdc, lpstr1, (int) strlen(lpstr1), &size);
 		SelectObject(hdc, GetSysColorBrush(COLOR_INFOBK));
 		SelectObject(hdc, GetStockObject(BLACK_PEN));
 		if ((MouseY-size.cy-4)>Controllers.top)
 		{
 			Rectangle(hdc, MouseX-size.cx-8, MouseY-size.cy-4, MouseX, MouseY);
-			TextOut(hdc, MouseX-size.cx-4, MouseY-size.cy-2, lpstr1, strlen(lpstr1));
+			TextOut(hdc, MouseX-size.cx-4, MouseY-size.cy-2, lpstr1, (int) strlen(lpstr1));
 		}
 		else
 		{
 			Rectangle(hdc, MouseX-size.cx-8, Controllers.top, MouseX, Controllers.top+size.cy+4);
-			TextOut(hdc, MouseX-size.cx-4, Controllers.top+2, lpstr1, strlen(lpstr1));
+			TextOut(hdc, MouseX-size.cx-4, Controllers.top+2, lpstr1, (int) strlen(lpstr1));
 		}
 	}
 
@@ -2688,7 +2688,7 @@ void AdjustWindow(void)
 			strcat(lpstr1, ")");
 		}
 		SendMessage(GetDlgItem(window, ID_TRACK), CB_ADDSTRING, 0, (LPARAM) lpstr1);
-		GetTextExtentPoint32(GetDC(GetDlgItem(window, ID_TRACK)), lpstr1, strlen(lpstr1), &size);
+		GetTextExtentPoint32(GetDC(GetDlgItem(window, ID_TRACK)), lpstr1, (int) strlen(lpstr1), &size);
 		if (size.cx > cx) cx = size.cx;
 	}
 
@@ -2700,7 +2700,7 @@ void AdjustWindow(void)
 	SendMessage(GetDlgItem(window, ID_TRACK), CB_SETDROPPEDWIDTH, cx, 0);
 	SendMessage(GetDlgItem(window, ID_TRACK), CB_SETCURSEL, Track, 0);
 	SendMessage(GetDlgItem(window, ID_DEVICE), CB_SETCURSEL, Device+1, 0);
-	SendMessage(GetDlgItem(window, ID_ZOOM), CB_SETCURSEL, Zoom / 5 - 1, 0);
+	SendMessage(GetDlgItem(window, ID_ZOOM), CB_SETCURSEL, (WPARAM)(Zoom / 5 - 1), 0);
 	SendMessage(GetDlgItem(window, ID_CONTROLLER), CB_SETCURSEL, Controller+2, 0);
 
 
@@ -2738,7 +2738,7 @@ void AdjustTrackChannels(WORD wTrack)
 
 	UNREFERENCED_PARAMETER(wTrack);
 
-	nEvents = MidiTrackGet(Sequence, Track, EVENT_COUNT);
+	nEvents = (int) MidiTrackGet(Sequence, Track, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	nFilters = MidiFilterTrackEvents(Sequence, Track, 0, nEvents-1, MIDI_INDEX, FILTER_ALL | FILTER_NOTES, &lpFilters);
 
@@ -2790,7 +2790,7 @@ void AdjustScroll(void)
 	si.nPage = 1;
 	SetScrollInfo(GetDlgItem(window, ID_NOTE), SB_CTL, &si, TRUE);
 	si.nMin = 0;
-	si.nMax = MidiGet(Sequence, TICK_COUNT);
+	si.nMax = (int) MidiGet(Sequence, TICK_COUNT);
 	SetScrollInfo(GetDlgItem(window, ID_POSITION), SB_CTL, &si, TRUE);
 }
 
@@ -2845,7 +2845,7 @@ void AdjustTitleBar(void)
 	strcat(lpstr1, " - ");
 
 	if (MidiGet(Sequence, MIDI_STATUS)==MIDI_PLAY)
-		Ticks = MidiGet(Sequence, CURRENT_TICKS);
+		Ticks = (DWORD) MidiGet(Sequence, CURRENT_TICKS);
 	else
 		if (Selection.right>=0)
 			Ticks = Selection.right;
@@ -2854,7 +2854,7 @@ void AdjustTitleBar(void)
 	strcat(lpstr1, itoa(Ticks, lpstr2, 10));
 	strcat(lpstr1, "/");
 
-	MaxTicks = MidiGet(Sequence, TICK_COUNT);
+	MaxTicks = (DWORD) MidiGet(Sequence, TICK_COUNT);
 	strcat(lpstr1, itoa(MaxTicks, lpstr2, 10));
 	strcat(lpstr1, Strings[43]);
 	SetWindowText(window, lpstr1);
@@ -2903,16 +2903,16 @@ void FilterSequence(void)
 	EnableWindow(window, FALSE);
 
 	qwLength = MidiGet(Sequence, TIME_COUNT);
-	min = qwLength / 60000000;
-	sec = (qwLength / 1000000) % 60;
-	ms = (qwLength % 1000000) / 1000;
+	min = (int)(qwLength / 60000000);
+	sec = (int)((qwLength / 1000000) % 60);
+	ms = (int)((qwLength % 1000000) / 1000);
 
 	filter = CreateWindow("FILTERWINDOW", Strings[58], WS_CAPTION | WS_SYSMENU | WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - 200, GetSystemMetrics(SM_CYSCREEN) / 2 - 176, 400 + GetSystemMetrics(SM_CXFIXEDFRAME)*2, 352+GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFIXEDFRAME)*2, window, NULL, wc.hInstance, NULL);
 
 	CreateWindowEx(WS_EX_CONTROLPARENT, "BUTTON", Strings[59], WS_CHILD | WS_VISIBLE | BS_GROUPBOX | WS_TABSTOP, 4, 4, 392, 48, filter, (HMENU) 0xFFF0, wc.hInstance, NULL);
 	ZeroMemory(lpstr1, MAX_PATH);
 	if (!strlen(lpfile)) strcpy(lpfile, Strings[57]);
-	j = strlen(lpfile)-1;
+	j = (int) strlen(lpfile)-1;
 	for (i=0; i<(int) strlen(lpfile); i++) if (lpfile[i]=='.') j=i;
 	strncpy(lpstr1, lpfile, j);
 	strcat(lpstr1, Strings[83]);
@@ -2992,7 +2992,7 @@ void FilterTrack(HANDLE NewHandle, WORD wSrcTrack, WORD wDstTrack, QWORD qwBase,
 
 	nFilter = MidiFilterTrackEvents(Sequence, wSrcTrack, qwStart, qwEnd, MIDI_TICKS, qwFilter, &lpFilter);
 	if (!nFilter) return;
-	nEvents = MidiTrackGet(Sequence, wSrcTrack, EVENT_COUNT);
+	nEvents = (DWORD) MidiTrackGet(Sequence, wSrcTrack, EVENT_COUNT);
 	MidiGetTrackEvents(Sequence, wSrcTrack, 0, nEvents-1, MIDI_INDEX, &lpEvents);
 	lpNew = (LPBRELS_MIDI_EVENT) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(BRELS_MIDI_EVENT)*nEvents);
 
@@ -3002,8 +3002,8 @@ void FilterTrack(HANDLE NewHandle, WORD wSrcTrack, WORD wDstTrack, QWORD qwBase,
 	for (i=0; i<(int) nFilter; i++)
 	{
 		lpNew[nNew]=lpEvents[lpFilter[i].qwStart];
-		lpNew[nNew].dwTicks=lpNew[nNew].dwTicks-qwStart + qwBase;
-		if (RoundTicks) lpNew[nNew].dwTicks = round(lpNew[nNew].dwTicks*Factor);
+		lpNew[nNew].dwTicks = (DWORD)(lpNew[nNew].dwTicks-qwStart + qwBase);
+		if (RoundTicks) lpNew[nNew].dwTicks = (DWORD) round(lpNew[nNew].dwTicks*Factor);
 		nNew++;
 		if (lpFilter[i].qwFilter == FILTER_NOTES)
 		{
@@ -3011,9 +3011,9 @@ void FilterTrack(HANDLE NewHandle, WORD wSrcTrack, WORD wDstTrack, QWORD qwBase,
 			lpNew[nNew]=lpNew[nNew-1];
 			lpNew[nNew].dwTicks = lpEvents[lpFilter[i].qwEnd].dwTicks;
 			lpNew[nNew].Data.a[1] = 0;
-			if (lpNew[nNew].dwTicks > qwEnd) lpNew[nNew].dwTicks = qwEnd;
-			lpNew[nNew].dwTicks=lpNew[nNew].dwTicks-qwStart + qwBase;
-			if (RoundTicks) lpNew[nNew].dwTicks = round(lpNew[nNew].dwTicks*Factor);
+			if (lpNew[nNew].dwTicks > qwEnd) lpNew[nNew].dwTicks = (DWORD) qwEnd;
+			lpNew[nNew].dwTicks = (DWORD)(lpNew[nNew].dwTicks-qwStart + qwBase);
+			if (RoundTicks) lpNew[nNew].dwTicks = (DWORD) round(lpNew[nNew].dwTicks*Factor);
 			nNew++;
 		}
 	}
@@ -3054,8 +3054,8 @@ BOOL DoFilterSequence(HWND hwnd)
 	GetWindowText(GetDlgItem(GetDlgItem(hwnd, 0xFFF3), 0xFFF9), lpstr1, MAX_PATH);
 	ms2 = atoi(lpstr1);
 
-	exclude = SendMessage(GetDlgItem(GetDlgItem(hwnd, 0xFFF3), 0xFFFA), BM_GETCHECK, 0, 0);
-	keep = SendMessage(GetDlgItem(hwnd, 0xFFFF), BM_GETCHECK, 0, 0);
+	exclude = (BOOL) SendMessage(GetDlgItem(GetDlgItem(hwnd, 0xFFF3), 0xFFFA), BM_GETCHECK, 0, 0);
+	keep = (BOOL) SendMessage(GetDlgItem(hwnd, 0xFFFF), BM_GETCHECK, 0, 0);
 
 	qwStart = min1 * 60000000 + sec1 * 1000000 + ms1 * 1000;
 	qwEnd = min2 * 60000000 + sec2 * 1000000 + ms2 * 1000;
@@ -3073,8 +3073,8 @@ BOOL DoFilterSequence(HWND hwnd)
 		if (MessageBox(hwnd, Strings[84], Strings[85], MB_YESNO | MB_DEFBUTTON2 | MB_ICONWARNING)==IDNO)
 			return FALSE;
 
-	nTracks = MidiGet(Sequence, TRACK_COUNT);
-	wBeat = MidiGet(Sequence, BEAT_SIZE);
+	nTracks = (int) MidiGet(Sequence, TRACK_COUNT);
+	wBeat = (WORD) MidiGet(Sequence, BEAT_SIZE);
 	if (!keep) wBeat = 16;
 
 	qwFilter = 0;
@@ -3100,14 +3100,14 @@ BOOL DoFilterSequence(HWND hwnd)
 	for (i=0; i<nTracks; i++)
 	if (SendMessage(list2, LB_GETSEL, i, 0))
 	{
-		MidiInsertTrack(newseq, MidiGet(newseq, TRACK_COUNT));
+		MidiInsertTrack(newseq, (WORD) MidiGet(newseq, TRACK_COUNT));
 
 		if (exclude)
 		{
-			FilterTrack(newseq, i, MidiGet(newseq, TRACK_COUNT)-1, 0, 0, qwStart, qwFilter, !keep);
-			FilterTrack(newseq, i, MidiGet(newseq, TRACK_COUNT)-1, qwStart, qwEnd, MidiGet(Sequence, TICK_COUNT), qwFilter, !keep);
+			FilterTrack(newseq, i, (WORD) MidiGet(newseq, TRACK_COUNT)-1, 0, 0, qwStart, qwFilter, !keep);
+			FilterTrack(newseq, i, (WORD) MidiGet(newseq, TRACK_COUNT)-1, qwStart, qwEnd, MidiGet(Sequence, TICK_COUNT), qwFilter, !keep);
 		}
-		else FilterTrack(newseq, i, MidiGet(newseq, TRACK_COUNT)-1, 0, qwStart, qwEnd, qwFilter, !keep);
+		else FilterTrack(newseq, i, (WORD) MidiGet(newseq, TRACK_COUNT)-1, 0, qwStart, qwEnd, qwFilter, !keep);
 	}
 
 	MidiEncode(newseq, lpstr2, TRUE);
@@ -3207,7 +3207,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case ID_END:
 			MidiSuspend(Sequence, TRUE);
 			MidiSilence(Sequence);
-			tickCount = MidiGet(Sequence, TICK_COUNT);
+			tickCount = (DWORD) MidiGet(Sequence, TICK_COUNT);
 			CurrentPosition = tickCount - PageSize;
 			if (CurrentPosition<0) CurrentPosition = 0;
 			MidiSet(Sequence, CURRENT_TICKS, CurrentPosition);
@@ -3232,7 +3232,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				MidiSuspend(Sequence, TRUE);
 				MidiSilence(Sequence);
-				MetaAction(META_UPDATE, 0, -1, FILTER_COPYRIGHT, lpstr1, strlen(lpstr1));
+				MetaAction(META_UPDATE, 0, -1, FILTER_COPYRIGHT, lpstr1, (int) strlen(lpstr1));
 				MidiResume(Sequence, TRUE);
 			}
 			break;
@@ -3242,7 +3242,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				MidiSuspend(Sequence, TRUE);
 				MidiSilence(Sequence);
-				MetaAction(META_UPDATE, Track, -1, FILTER_TRACKNAME, lpstr1, strlen(lpstr1));
+				MetaAction(META_UPDATE, Track, -1, FILTER_TRACKNAME, lpstr1, (int) strlen(lpstr1));
 				MidiResume(Sequence, TRUE);
 				AdjustWindow();
 			}
@@ -3275,7 +3275,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				MidiSuspend(Sequence, TRUE);
 				MidiSilence(Sequence);
-				MetaAction(META_UPDATE, Track, -1, FILTER_INSTRUMENTNAME, lpstr1, strlen(lpstr1));
+				MetaAction(META_UPDATE, Track, -1, FILTER_INSTRUMENTNAME, lpstr1, (int) strlen(lpstr1));
 				MidiResume(Sequence, TRUE);
 				AdjustWindow();
 			}
@@ -3321,9 +3321,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			Meta = LOWORD(wParam);
 			AdjustButtons();
 			break;
-		case ID_TRACK        : if (HIWORD(wParam)==CBN_SELCHANGE) Track = SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0); AdjustButtons(); Redraw(); return 0;
-		case ID_CONTROLLER   : if (HIWORD(wParam)==CBN_SELCHANGE) Controller = SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0) - 2; Redraw(); return 0;
-		case ID_ZOOM         : if (HIWORD(wParam)==CBN_SELCHANGE) Zoom = (SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0) + 1) * 5; Redraw(); return 0;
+		case ID_TRACK        : if (HIWORD(wParam)==CBN_SELCHANGE) Track = (int) SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0); AdjustButtons(); Redraw(); return 0;
+		case ID_CONTROLLER   : if (HIWORD(wParam)==CBN_SELCHANGE) Controller = (int) SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0) - 2; Redraw(); return 0;
+		case ID_ZOOM         : if (HIWORD(wParam)==CBN_SELCHANGE) Zoom = (double)(SendMessage((HWND) lParam, CB_GETCURSEL, 0, 0) + 1) * 5; Redraw(); return 0;
 		case ID_DEVICE       : if (HIWORD(wParam)==CBN_SELCHANGE) ChangeDevice(); Redraw(); return 0;
 		case ID_BEAT         : if (HIWORD(wParam)==CBN_SELCHANGE) ChangeBeat(); Redraw(); return 0;
 		default: return 0;
@@ -3379,7 +3379,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 
 	/* Initializes path to executable's directory */
 	GetModuleFileName(NULL, &path[0], MAX_PATH);
-	for (i=strlen(&path[0])-1; i >= 0; i--) if (path[i]=='\\') break; path[i]=0;
+	for (i=(int) strlen(&path[0])-1; i >= 0; i--) if (path[i]=='\\') break; path[i]=0;
 	SetCurrentDirectory(&path[0]);
 
 	switch (GetUserDefaultLangID())
@@ -3517,7 +3517,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	gray3 = CreatePen(PS_SOLID, 1, 0xA0A0A0);
 	gray4 = CreatePen(PS_SOLID, 1, 0xC0C0C0);
 	gray5 = CreatePen(PS_SOLID, 1, 0xE0E0E0);
-	hfont = CreateFont(14, (int) NULL, (int) NULL, (int) NULL, FW_BOLD, (DWORD) NULL, (DWORD) NULL, (DWORD) NULL, (DWORD) NULL, (DWORD) NULL, (DWORD) NULL, (DWORD) NULL, (DWORD) NULL, "Arial");
+	hfont = CreateFont(14, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 0, 0, "Arial");
 	Cursors[ARROW  ] = LoadCursor(NULL, IDC_ARROW  );
 	Cursors[HAND   ] = LoadCursor(NULL, IDC_HAND   );
 	Cursors[UPARROW] = LoadCursor(NULL, IDC_UPARROW);
@@ -3573,7 +3573,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	for (i=0; i<130; i++)
 	{
 		SendMessage(GetDlgItem(window, ID_CONTROLLER), CB_ADDSTRING, 0, (LPARAM) &sControllers[i]);
-		GetTextExtentPoint32(GetDC(GetDlgItem(window, ID_CONTROLLER)), (char*) &sControllers[i], strlen((char*) &sControllers[i]), &size);
+		GetTextExtentPoint32(GetDC(GetDlgItem(window, ID_CONTROLLER)), (char*) &sControllers[i], (int) strlen((char*) &sControllers[i]), &size);
 		if (size.cx > cx ) cx = size.cx;
 	}
 	SendMessage(GetDlgItem(window, ID_CONTROLLER), CB_SETDROPPEDWIDTH, cx, 0);
@@ -3583,7 +3583,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	{
 		midiOutGetDevCaps(i-1, &moc, sizeof(MIDIOUTCAPS));
 		SendMessage(GetDlgItem(window, ID_DEVICE), CB_ADDSTRING, 0, (LPARAM) &moc.szPname);
-		GetTextExtentPoint32(GetDC(GetDlgItem(window, ID_DEVICE)), (char*) &moc.szPname, strlen((char*) &moc.szPname), &size);
+		GetTextExtentPoint32(GetDC(GetDlgItem(window, ID_DEVICE)), (char*) &moc.szPname, (int) strlen((char*) &moc.szPname), &size);
 		if (size.cx > cx ) cx = size.cx;
 	}
 	SendMessage(GetDlgItem(window, ID_DEVICE), CB_SETDROPPEDWIDTH, cx, 0);
@@ -3602,7 +3602,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 				DispatchMessage(&msg);
 			else
 			{
-				dwStatus = MidiGet(Sequence, MIDI_STATUS);
+				dwStatus = (DWORD) MidiGet(Sequence, MIDI_STATUS);
 				if ((dwStatus==MIDI_PLAY) || (dwOldStatus!=dwStatus))
 					Callback();
 				dwOldStatus = dwStatus;
@@ -3637,6 +3637,6 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	DeleteObject(hfont);
 	for (i=0; i<5; i++) DestroyCursor(Cursors[i]);
 
-	return msg.wParam;
+	return (int) msg.wParam;
 }
 

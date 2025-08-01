@@ -602,7 +602,7 @@ __declspec(dllexport) BOOL WINAPI MidiPlay(HANDLE hSequence)
 	if (old!=MIDI_PLAY)
 	{
 		lpSequence->qwLastTime.QuadPart = 0;
-		timeSetEvent(lpSequence->Precision / 1000, lpSequence->Precision / 1000, PlayProc, (DWORD_PTR) hSequence, TIME_PERIODIC);
+		timeSetEvent((UINT)(lpSequence->Precision / 1000), (UINT)(lpSequence->Precision / 1000), PlayProc, (DWORD_PTR) hSequence, TIME_PERIODIC);
 	}
 
 	return TRUE;
@@ -818,8 +818,8 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 	case MIDI_INDEX:
 		if ((qwFirst<lpSequence->Tracks[wTrack].dwEvents) && (qwLast<lpSequence->Tracks[wTrack].dwEvents))
 		{
-			Inicial = qwFirst;
-			Final = qwLast;
+			Inicial = (int) qwFirst;
+			Final = (int) qwLast;
 		}
 		else
 		{
@@ -912,8 +912,8 @@ __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTr
 	case MIDI_INDEX:
 		if ((qwFirst<lpSequence->Tracks[wTrack].dwEvents) && (qwLast<lpSequence->Tracks[wTrack].dwEvents))
 		{
-			Inicial = qwFirst;
-			Final = qwLast;
+			Inicial = (int) qwFirst;
+			Final = (int) qwLast;
 		}
 		else
 		{
@@ -980,8 +980,8 @@ __declspec(dllexport) DWORD WINAPI MidiFilterTrackEvents(HANDLE hSequence, WORD 
 	case MIDI_INDEX:
 		if ((qwFirst<lpSequence->Tracks[wTrack].dwEvents) && (qwLast<lpSequence->Tracks[wTrack].dwEvents))
 		{
-			Inicial = qwFirst;
-			Final = qwLast;
+			Inicial = (int) qwFirst;
+			Final = (int) qwLast;
 		}
 		else
 		{
@@ -1232,7 +1232,7 @@ __declspec(dllexport) QWORD WINAPI MidiGet(HANDLE hSequence, DWORD dwWhat)
 		Retorno = (QWORD) lpSequence->wTracks;
 		break;
 	case CURRENT_TIME   :
-		Retorno = lpSequence->CurrentTime;
+		Retorno = (QWORD) lpSequence->CurrentTime;
 		break;
 	case CURRENT_TICKS  :
 		Retorno = (QWORD) lpSequence->CurrentTicks;
@@ -1419,14 +1419,14 @@ __declspec(dllexport) QWORD WINAPI MidiSet(HANDLE hSequence, DWORD dwWhat, QWORD
 		}
 		break;
 	case CURRENT_TIME:
-		Retorno = lpSequence->CurrentTime;
+		Retorno = (QWORD) lpSequence->CurrentTime;
 		MidiSet(hSequence, CURRENT_TICKS, MidiQuery(hSequence, 0, MIDI_TICKS, MIDI_TIME, qwValue));
 		break;
 	case CURRENT_TICKS:
 		Retorno = (QWORD) lpSequence->CurrentTicks;
 
-		lpSequence->CurrentTicks = qwValue;
-		lpSequence->CurrentTime = MidiQuery(hSequence, 0, MIDI_TIME, MIDI_TICKS, qwValue);
+		lpSequence->CurrentTicks = (double) qwValue;
+		lpSequence->CurrentTime = (double) MidiQuery(hSequence, 0, MIDI_TIME, MIDI_TICKS, qwValue);
 
 		for (i=0; i<lpSequence->wTracks; i++)
 			AdjustPosition(lpSequence, i);
@@ -1437,7 +1437,7 @@ __declspec(dllexport) QWORD WINAPI MidiSet(HANDLE hSequence, DWORD dwWhat, QWORD
 			if (Event->dwTicks <= lpSequence->CurrentTicks)
 			{
 				lpSequence->dwCurrentTempo = (Event->Data.p[0] << 16) | (Event->Data.p[1] << 8) | Event->Data.p[2];
-				lpSequence->TempoTime = MidiQuery(hSequence, 0, MIDI_TIME, MIDI_TICKS, Event->dwTicks);
+				lpSequence->TempoTime = (double) MidiQuery(hSequence, 0, MIDI_TIME, MIDI_TICKS, Event->dwTicks);
 				lpSequence->TempoTicks = Event->dwTicks;
 				lpSequence->TickInterval = lpSequence->dwCurrentTempo / lpSequence->wBeatSize;
 			}
@@ -1551,7 +1551,7 @@ __declspec(dllexport) QWORD WINAPI MidiQuery(HANDLE hSequence, WORD wTrack, DWOR
 			dblTime = 0.0l;
 			Ticks = 0.0l;
 			Tempo = 500000.0l;
-			Value = qwValue;
+			Value = (double) qwValue;
 			Delta = lpSequence->wBeatSize;
 			for (i=0; i<lpSequence->dwTempos; i++)
 			{
@@ -1563,7 +1563,7 @@ __declspec(dllexport) QWORD WINAPI MidiQuery(HANDLE hSequence, WORD wTrack, DWOR
 			 	Tempo = (lpSequence->Tracks[Track].Events[Event].Data.p[0] << 16) | (lpSequence->Tracks[Track].Events[Event].Data.p[1] << 8) | lpSequence->Tracks[Track].Events[Event].Data.p[2];
 				Ticks = EventTicks;
 			}
-			Retorno = dblTime + (Value - Ticks) * Tempo / Delta;
+			Retorno = (QWORD)(dblTime + (Value - Ticks) * Tempo / Delta);
 			break;
 		default:
 			Retorno = BRELS_ERROR;
@@ -1578,7 +1578,7 @@ __declspec(dllexport) QWORD WINAPI MidiQuery(HANDLE hSequence, WORD wTrack, DWOR
 			Ticks = 0.0l;
 			Tempo = 500000.0l;
 			Delta = lpSequence->wBeatSize;
-			Value = qwValue;
+			Value = (double) qwValue;
 			for (i=0; i<lpSequence->dwTempos; i++)
 			{
 				Track = lpSequence->lpTempos[i].wTrack;
@@ -1590,7 +1590,7 @@ __declspec(dllexport) QWORD WINAPI MidiQuery(HANDLE hSequence, WORD wTrack, DWOR
 				Ticks = EventTicks;
 			}
 
-			Retorno = Ticks + (Value - dblTime) * Delta / Tempo;
+			Retorno = (QWORD)(Ticks + (Value - dblTime) * Delta / Tempo);
 			break;
 		default:
 			Retorno = BRELS_ERROR;

@@ -67,7 +67,7 @@ int InputBox(HWND hwndParent, char* InputTitle, char* InputText, char* lpInOutTe
 	MSG msg;
 	int Return;
 
-	if (!IsWindow(hwndParent)) return (int) NULL;
+	if (!IsWindow(hwndParent)) return 0;
 	/*if (IsBadCodePtr((FARPROC) lpInOutText)) return (int) NULL;*/
 
 	ZeroMemory(&wc, sizeof(WNDCLASS));
@@ -105,14 +105,14 @@ int InputBox(HWND hwndParent, char* InputTitle, char* InputText, char* lpInOutTe
 		DispatchMessage(&msg);
 	}
 
-	Return = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+	Return = (int) GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
 	if (Return == IDOK)
 	{
 		GetWindowText(
 					GetDlgItem(hwnd, 10000),
 					lpInOutText,
-					SendMessage(GetDlgItem(hwnd, 10000), WM_GETTEXTLENGTH, 0, 0) + 1
+					(int)(SendMessage(GetDlgItem(hwnd, 10000), WM_GETTEXTLENGTH, 0, 0) + 1)
 				 );
 	}
 
