@@ -74,7 +74,7 @@ void BuildTempoTable(LPBRELS_MIDI_SEQUENCE lpSequence);
 DWORD GetTrackSize(LPBRELS_MIDI_SEQUENCE lpSequence, WORD wTrack);
 void GetTrackData(LPBRELS_MIDI_SEQUENCE lpSequence, WORD wTrack, LPBYTE* lpData);
 void AdjustPosition(LPBRELS_MIDI_SEQUENCE lpSequence, WORD wTrack);
-void CALLBACK PlayProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
+void CALLBACK PlayProc(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
 void PlayCallback(LPBRELS_MIDI_SEQUENCE lpSequence, BOOL Ignore);
 int Compare(void* data1, void* data2);
 
@@ -96,7 +96,7 @@ __declspec(dllexport) BOOL WINAPI MidiOpen(LPSTR lpstrFile, DWORD dwDevice, LPHA
 
 	if (dwDevice != NO_DEVICE)
 	{
-		if (midiOutOpen(&lpSequence->Handle, dwDevice, (DWORD) NULL, (DWORD) NULL, (DWORD) CALLBACK_NULL)!=MMSYSERR_NOERROR)
+		if (midiOutOpen(&lpSequence->Handle, dwDevice, (DWORD_PTR) NULL, (DWORD_PTR) NULL, (DWORD) CALLBACK_NULL)!=MMSYSERR_NOERROR)
 		{
 			HeapFree(GetProcessHeap(), 0, lpSequence);
 			return FALSE;
@@ -336,7 +336,7 @@ __declspec(dllexport) BOOL WINAPI MidiCreate(DWORD dwDevice, WORD wBeatSize, LPH
 
 	if (dwDevice != NO_DEVICE)
 	{
-		if (midiOutOpen(&lpSequence->Handle, dwDevice, (DWORD) NULL, (DWORD) NULL, (DWORD) CALLBACK_NULL)!=MMSYSERR_NOERROR)
+		if (midiOutOpen(&lpSequence->Handle, dwDevice, (DWORD_PTR) NULL, (DWORD_PTR) NULL, (DWORD) CALLBACK_NULL)!=MMSYSERR_NOERROR)
 		{
 			HeapFree(GetProcessHeap(), 0, lpSequence);
 			return FALSE;
@@ -602,7 +602,7 @@ __declspec(dllexport) BOOL WINAPI MidiPlay(HANDLE hSequence)
 	if (old!=MIDI_PLAY)
 	{
 		lpSequence->qwLastTime.QuadPart = 0;
-		timeSetEvent(lpSequence->Precision / 1000, lpSequence->Precision / 1000, PlayProc, (DWORD) hSequence, TIME_PERIODIC);
+		timeSetEvent(lpSequence->Precision / 1000, lpSequence->Precision / 1000, PlayProc, (DWORD_PTR) hSequence, TIME_PERIODIC);
 	}
 
 	return TRUE;
@@ -1173,12 +1173,12 @@ __declspec(dllexport) QWORD WINAPI MidiGet(HANDLE hSequence, DWORD dwWhat)
 		Retorno = (QWORD) lpSequence->dwDevice;
 		break;
 	case MIDI_HANDLE    :
-		Retorno = (QWORD) (DWORD) lpSequence->Handle;
+		Retorno = (QWORD) (DWORD_PTR) lpSequence->Handle;
 		break;
 	case MIDI_HEADER    :
 		lpbmh = (LPBRELS_MIDI_HEADER) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(BRELS_MIDI_HEADER));
 		*lpbmh = lpSequence->Header;
-		Retorno = (QWORD) (DWORD) lpbmh;
+		Retorno = (QWORD) (DWORD_PTR) lpbmh;
 		break;
 	case MIDI_LOOP      :
 		Retorno = (QWORD) lpSequence->Loop;
@@ -1196,7 +1196,7 @@ __declspec(dllexport) QWORD WINAPI MidiGet(HANDLE hSequence, DWORD dwWhat)
 		Retorno = (QWORD) lpSequence->Played;
 		break;
 	case CALLBACK_HWND:
-		Retorno = (QWORD) (DWORD) lpSequence->Callback;
+		Retorno = (QWORD) (DWORD_PTR) lpSequence->Callback;
 		break;
 	case CALLBACK_MESSAGE:
 		Retorno = (QWORD) lpSequence->CallbackMessage;
@@ -1289,7 +1289,7 @@ __declspec(dllexport) QWORD WINAPI MidiTrackGet(HANDLE hSequence, WORD wTrack, D
 		lpth = (LPBRELS_TRACK_HEADER) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(BRELS_TRACK_HEADER));
 		lpSequence->Tracks[wTrack].Header.dwLength = btldw(GetTrackSize(lpSequence, wTrack));
 		*lpth = lpSequence->Tracks[wTrack].Header;
-		Retorno = (QWORD) (DWORD) lpth;
+		Retorno = (QWORD) (DWORD_PTR) lpth;
 		break;
 	case TRACK_MUTE:
 		Retorno = (QWORD) lpSequence->Tracks[wTrack].Mute;
@@ -1332,7 +1332,7 @@ __declspec(dllexport) QWORD WINAPI MidiEventGet(HANDLE hSequence, WORD wTrack, D
 			CopyMemory(lpBuffer, lpSequence->Tracks[wTrack].Events[dwEvent].Data.p, lpSequence->Tracks[wTrack].Events[dwEvent].DataSize);
 		else
 			CopyMemory(lpBuffer, &lpSequence->Tracks[wTrack].Events[dwEvent].Data, lpSequence->Tracks[wTrack].Events[dwEvent].DataSize);
-		Retorno = (QWORD) (DWORD) lpBuffer;
+		Retorno = (QWORD) (DWORD_PTR) lpBuffer;
 		break;
 	case EVENT_DATASIZE:
 		Retorno = (QWORD) lpSequence->Tracks[wTrack].Events[dwEvent].DataSize;
@@ -1379,7 +1379,7 @@ __declspec(dllexport) QWORD WINAPI MidiSet(HANDLE hSequence, DWORD dwWhat, QWORD
 		break;
 	case MIDI_HANDLE:
 		midiOutClose(lpSequence->Handle);
-		lpSequence->Handle = (HMIDIOUT) (DWORD) qwValue;
+		lpSequence->Handle = (HMIDIOUT) (DWORD_PTR) qwValue;
 		Retorno = (QWORD) TRUE;
 		break;
 	case MIDI_LOOP:
@@ -1392,8 +1392,8 @@ __declspec(dllexport) QWORD WINAPI MidiSet(HANDLE hSequence, DWORD dwWhat, QWORD
 		lpSequence->Precision = qwValue;
 		break;
 	case CALLBACK_HWND:
-		Retorno = (QWORD) (DWORD) lpSequence->Callback;
-		lpSequence->Callback = (HWND) (DWORD) qwValue;
+		Retorno = (QWORD) (DWORD_PTR) lpSequence->Callback;
+		lpSequence->Callback = (HWND) (DWORD_PTR) qwValue;
 		break;
 	case CALLBACK_MESSAGE:
 		Retorno = (QWORD) lpSequence->CallbackMessage;
@@ -1888,7 +1888,7 @@ void AdjustPosition(LPBRELS_MIDI_SEQUENCE lpSequence, WORD wTrack)
 
 }
 
-void CALLBACK PlayProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
+void CALLBACK PlayProc(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence = (LPBRELS_MIDI_SEQUENCE) dwUser;
 

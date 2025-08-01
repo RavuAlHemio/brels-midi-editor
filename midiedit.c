@@ -548,7 +548,7 @@ BOOL MetaAction(int Action, int nTrack, int Position, QWORD qwFilter, LPSTR lpDa
 		ZeroMemory(lpData, DataSize);
 		if (nFilters)
 		{
-			Event.Data.p = (LPBYTE) (DWORD) MidiEventGet(Sequence, nTrack, lpFilters[0].qwStart, EVENT_DATA);
+			Event.Data.p = (LPBYTE) (DWORD_PTR) MidiEventGet(Sequence, nTrack, lpFilters[0].qwStart, EVENT_DATA);
 			CopyMemory(lpData, Event.Data.p, MidiEventGet(Sequence, nTrack, lpFilters[0].qwStart, EVENT_DATASIZE));
 			MidiFreeBuffer(Event.Data.p);
 			Return = TRUE;
@@ -798,7 +798,7 @@ void DeleteController(void)
 	{
 		if (MidiEventGet(Sequence, Track, i, EVENT_TICKS)!=(DWORD) Selection.right) continue;
 		Event = MidiEventGet(Sequence, Track, i, EVENT_EVENT) & 0xF0;
-		lpData = (LPBYTE) (DWORD) MidiEventGet(Sequence, Track, i, EVENT_DATA);
+		lpData = (LPBYTE) (DWORD_PTR) MidiEventGet(Sequence, Track, i, EVENT_DATA);
 		if ((Controller==-1) && (Event==0xE0))
 		{
 			MidiRemoveTrackEvents(Sequence, Track, i, i, MIDI_INDEX);
@@ -932,7 +932,7 @@ void RemoveProgram(void)
 		}
 		if (Event==0xB0)
 		{
-			lpData = (LPBYTE) (DWORD) MidiEventGet(Sequence, Track, i, EVENT_DATA);
+			lpData = (LPBYTE) (DWORD_PTR) MidiEventGet(Sequence, Track, i, EVENT_DATA);
 			if ((lpData[0]==0x00) || (lpData[0]==0x20))
 			{
 				MidiRemoveTrackEvents(Sequence, Track, i, i, MIDI_INDEX);
@@ -1450,9 +1450,9 @@ void ChangeDevice(void)
 	HMIDIOUT hmo;
 
 	Device = SendMessage(GetDlgItem(window, ID_DEVICE), CB_GETCURSEL, 0, 0) - 1;
-	MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD) NULL);
-	midiOutOpen(&hmo, Device, (DWORD) NULL, (DWORD) NULL, (DWORD) CALLBACK_NULL);
-	MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD) hmo);
+	MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD_PTR) NULL);
+	midiOutOpen(&hmo, Device, (DWORD_PTR) NULL, (DWORD_PTR) NULL, (DWORD) CALLBACK_NULL);
+	MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD_PTR) hmo);
 	MidiSet(Sequence, CURRENT_TICKS, MidiGet(Sequence, CURRENT_TICKS));
 }
 
@@ -1596,8 +1596,8 @@ BOOL FileNew(void)
 
 		MidiClose(Sequence);
 		Sequence = NewSequence;
-		midiOutOpen(&hmo, Device, (DWORD) NULL, (DWORD) NULL, (DWORD) CALLBACK_NULL);
-		MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD) hmo);
+		midiOutOpen(&hmo, Device, (DWORD_PTR) NULL, (DWORD_PTR) NULL, (DWORD) CALLBACK_NULL);
+		MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD_PTR) hmo);
 		Beat = MidiGet(Sequence, BEAT_SIZE);
 		Zoom = 100;
 		Track = 0;
@@ -1680,8 +1680,8 @@ BOOL FileOpen(void)
 			}
 			MidiClose(Sequence);
 			Sequence = NewSequence;
-			midiOutOpen(&hmo, Device, (DWORD) NULL, (DWORD) NULL, (DWORD) CALLBACK_NULL);
-			MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD) hmo);
+			midiOutOpen(&hmo, Device, (DWORD_PTR) NULL, (DWORD_PTR) NULL, (DWORD) CALLBACK_NULL);
+			MidiSet(Sequence, MIDI_HANDLE, (QWORD) (DWORD_PTR) hmo);
 
 			/* You can use it if you wish to */
 			/* MidiSet(Sequence, CALLBACK_HWND, (QWORD) window); */
@@ -1699,7 +1699,7 @@ BOOL FileOpen(void)
 				MessageBox(window, Strings[37], Strings[38], MB_ICONINFORMATION);
 				FirstFileOpen = FALSE;
 			}
-			lpbmh = (LPBRELS_MIDI_HEADER) (DWORD) MidiGet(Sequence, MIDI_HEADER);
+			lpbmh = (LPBRELS_MIDI_HEADER) (DWORD_PTR) MidiGet(Sequence, MIDI_HEADER);
 			if (btlw(lpbmh->wFormat)==0) SplitChannels();
 			MidiFreeBuffer(lpbmh);
 
@@ -2039,7 +2039,7 @@ void KeyUp(WPARAM wParam, LPARAM lParam)
 		GetProgramInformation(Track, -1, &Channel, NULL, NULL, NULL);
 		if (Channel!=-1)
 		{
-			hmo = (HMIDIOUT) (DWORD) MidiGet(Sequence, MIDI_HANDLE);
+			hmo = (HMIDIOUT) (DWORD_PTR) MidiGet(Sequence, MIDI_HANDLE);
 			midiOutShortMsg(hmo, (0x80 | Channel) | ((((127-CurrentNote)  / 12) * 12 + i)<<8));
 		}
 	}
@@ -2096,7 +2096,7 @@ void PlayPiano(int Note)
 	GetProgramInformation(Track, -1, &Channel, &BankHigh, &BankLow, &Program);
 	if (Channel!=-1)
 	{
-		hmo = (HMIDIOUT) (DWORD) MidiGet(Sequence, MIDI_HANDLE);
+		hmo = (HMIDIOUT) (DWORD_PTR) MidiGet(Sequence, MIDI_HANDLE);
 		if (BankLow==-1) BankLow = 0;
 		if (BankHigh==-1) BankHigh=0;
 		if (Program==-1) Program = 0;
@@ -2118,7 +2118,7 @@ void SilentPiano(void)
 	if (Movement) return;
 	if (MidiGet(Sequence, MIDI_STATUS)==MIDI_PLAY) return;
 
-	hmo = (HMIDIOUT) (DWORD) MidiGet(Sequence, MIDI_HANDLE);
+	hmo = (HMIDIOUT) (DWORD_PTR) MidiGet(Sequence, MIDI_HANDLE);
 	for (i=0; i<16; i++) midiOutShortMsg(hmo, (0xB0 | i) | (120 << 8));
 }
 
