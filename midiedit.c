@@ -28,6 +28,7 @@
 #include <windows.h>
 #include <commctrl.h>
 #include <shlwapi.h>
+#include <stdio.h>
 #include "brlsmidi.h"
 #include "inputbox.h"
 #include "mididec.h"
@@ -162,10 +163,10 @@ LPBRELS_MIDI_EVENT Clipboard;
 double TickWidth, KeyHeight, Zoom;
 
 char* trim(char* src);
-void KeyText(int Key, LPSTR buffer);
+void KeyText(int Key, LPSTR buffer, SIZE_T bufferLen);
 void LoadText(const char* File, char* Structure, int Items, int Item_Size);
 int NoteVK(WPARAM wParam);
-void GetInstrumentName(int BankHigh, int BankLow, int Program, LPSTR lpBuffer);
+void GetInstrumentName(int BankHigh, int BankLow, int Program, LPSTR lpBuffer, SIZE_T cbBuffer);
 void GetProgramInformation(int nTrack, int Position, int* Channel, int* BankHigh, int* BankLow, int* Program);
 BOOL GetChannelProgramInformation(int Channel, int Position, int* BankHigh, int* BankLow, int* Program);
 void RenumberTracks(void);
@@ -248,8 +249,15 @@ char* trim(char* src)
 		if (src[end]==' ') end--;
 	}
 
-	if (end-start)
-		strncpy(src, &src[start], end-start);
+	if (end-start>0)
+	{
+		SIZE_T i;
+		for (i = 0; i < end-start; i++)
+		{
+			src[i] = src[start + i];
+		}
+		src[i] = '\0';
+	}
 
 	return src;
 }
@@ -263,33 +271,30 @@ double round(double value)
 		return fl;
 }
 
-void KeyText(int Key, LPSTR lpBuffer)
+void KeyText(int Key, LPSTR lpBuffer, SIZE_T cbBuffer)
 {
-	char temp[256];
 	int Octave;
+	const char *KeyName = "?";
 
-	lpBuffer[0]=0;
 	Octave = Key / 12;
-	if (Octave<10) strcat(lpBuffer, "0");
-	strcat(lpBuffer, itoa(Octave, (char*) &temp, 10));
-	strcat(lpBuffer, "-");
-
 	switch (Key % 12)
 	{
-	case  0: strcat(lpBuffer, "C" ); break;
-	case  1: strcat(lpBuffer, "C#"); break;
-	case  2: strcat(lpBuffer, "D" ); break;
-	case  3: strcat(lpBuffer, "D#"); break;
-	case  4: strcat(lpBuffer, "E" ); break;
-	case  5: strcat(lpBuffer, "F" ); break;
-	case  6: strcat(lpBuffer, "F#"); break;
-	case  7: strcat(lpBuffer, "G" ); break;
-	case  8: strcat(lpBuffer, "G#"); break;
-	case  9: strcat(lpBuffer, "A" ); break;
-	case 10: strcat(lpBuffer, "A#"); break;
-	case 11: strcat(lpBuffer, "B" ); break;
+	case  0: KeyName = "C";  break;
+	case  1: KeyName = "C#"; break;
+	case  2: KeyName = "D";  break;
+	case  3: KeyName = "D#"; break;
+	case  4: KeyName = "E";  break;
+	case  5: KeyName = "F";  break;
+	case  6: KeyName = "F#"; break;
+	case  7: KeyName = "G";  break;
+	case  8: KeyName = "G#"; break;
+	case  9: KeyName = "A";  break;
+	case 10: KeyName = "A#"; break;
+	case 11: KeyName = "B";  break;
 	default: break;
 	}
+
+	sprintf_s(lpBuffer, cbBuffer, "%02u-%s", Octave, KeyName);
 }
 
 void LoadText(const char* File, char* Structure, int Items, int Item_Size)
@@ -314,7 +319,7 @@ void LoadText(const char* File, char* Structure, int Items, int Item_Size)
 	{
 		if (temp[i]=='\n')
 		{
-			strncpy(&Structure[Item_Size*Lines++], &temp[LastLine], i-LastLine-1);
+			strncpy_s(&Structure[Item_Size*Lines++], Item_Size, &temp[LastLine], i-LastLine-1);
 			LastLine = i+1;
 		}
 	}
@@ -355,15 +360,15 @@ int NoteVK(WPARAM wParam)
 	return -1;
 }
 
-void GetInstrumentName(int BankHigh, int BankLow, int Program, LPSTR lpBuffer)
+void GetInstrumentName(int BankHigh, int BankLow, int Program, LPSTR lpBuffer, SIZE_T cbBuffer)
 {
-	strcpy(lpBuffer, "");
+	strcpy_s(lpBuffer, cbBuffer, "");
 	switch (BankHigh)
 	{
-	case   -1: if (Program!=-1) strcpy(lpBuffer, (char*) &Instruments[0][Program]); break;
-	case 0x78: if (Program!=-1) strcpy(lpBuffer, (char*) &Instruments[10][Program]); break;
-	case 0x79: if ((Program!=-1) && (BankLow!=-1) && (BankLow<10)) strcpy(lpBuffer, (char*) &Instruments[BankLow][Program]); break;
-	default  : if ((Program!=-1) && (BankHigh<10)) strcpy(lpBuffer, (char*) &Instruments[BankHigh][Program]); break;
+	case   -1: if (Program!=-1) strcpy_s(lpBuffer, cbBuffer, (char*) &Instruments[0][Program]); break;
+	case 0x78: if (Program!=-1) strcpy_s(lpBuffer, cbBuffer, (char*) &Instruments[10][Program]); break;
+	case 0x79: if ((Program!=-1) && (BankLow!=-1) && (BankLow<10)) strcpy_s(lpBuffer, cbBuffer, (char*) &Instruments[BankLow][Program]); break;
+	default  : if ((Program!=-1) && (BankHigh<10)) strcpy_s(lpBuffer, cbBuffer, (char*) &Instruments[BankHigh][Program]); break;
 	}
 }
 
@@ -858,10 +863,10 @@ void PlaceMeta(void)
 	{
 	case ID_PROGRAM : PlaceProgram(); break;
 	case ID_TEMPO   : PlaceTempo(); break;
-	case ID_TEXT    : strcpy(lpstr2, Strings[1]); strcpy(lpstr3, Strings[2]); qwFilter = FILTER_TEXT; break;
-	case ID_LYRIC   : strcpy(lpstr2, Strings[3]); strcpy(lpstr3, Strings[4]); qwFilter = FILTER_LYRIC; break;
-	case ID_MARKER  : strcpy(lpstr2, Strings[5]); strcpy(lpstr3, Strings[6]); qwFilter = FILTER_MARKER; break;
-	case ID_CUEPOINT: strcpy(lpstr2, Strings[7]); strcpy(lpstr3, Strings[8]); qwFilter = FILTER_CUEPOINT; break;
+	case ID_TEXT    : strcpy_s(lpstr2, MAX_PATH, Strings[1]); strcpy_s(lpstr3, MAX_PATH, Strings[2]); qwFilter = FILTER_TEXT; break;
+	case ID_LYRIC   : strcpy_s(lpstr2, MAX_PATH, Strings[3]); strcpy_s(lpstr3, MAX_PATH, Strings[4]); qwFilter = FILTER_LYRIC; break;
+	case ID_MARKER  : strcpy_s(lpstr2, MAX_PATH, Strings[5]); strcpy_s(lpstr3, MAX_PATH, Strings[6]); qwFilter = FILTER_MARKER; break;
+	case ID_CUEPOINT: strcpy_s(lpstr2, MAX_PATH, Strings[7]); strcpy_s(lpstr3, MAX_PATH, Strings[8]); qwFilter = FILTER_CUEPOINT; break;
 	default: break;
 	}
 
@@ -1038,18 +1043,35 @@ void ChannelList(HWND hwnd, int Channel)
 			Programs[i] = Program;
 		}
 
-		strcpy(lpstr1, Strings[9]);
-		if (i<10) strcat(lpstr1, "0");
-		strcat(lpstr1, itoa(i, lpstr2, 10));
-		if (i==9) strcpy(lpstr1, Strings[10]);
-		if (Channels[i])
+		if (i==9)
 		{
-			GetInstrumentName(BankHighs[i], BankLows[i], Programs[i], lpstr2);
-			if (!strlen(lpstr2)) strcpy(lpstr2, Strings[11]);
-			strcat(lpstr1, " (");
-			strcat(lpstr1, lpstr2);
-			strcat(lpstr1, ")");
+			if (Channels[i])
+			{
+				GetInstrumentName(BankHighs[i], BankLows[i], Programs[i], lpstr2, MAX_PATH);
+				if (!strlen(lpstr2)) strncpy_s(lpstr2, MAX_PATH, Strings[11], strlen(Strings[11]));
+
+				sprintf_s(lpstr1, MAX_PATH, "%s (%s)", Strings[10], lpstr2);
+			}
+			else
+			{
+				sprintf_s(lpstr1, MAX_PATH, "%s", Strings[10]);
+			}
 		}
+		else
+		{
+			if (Channels[i])
+			{
+				GetInstrumentName(BankHighs[i], BankLows[i], Programs[i], lpstr2, MAX_PATH);
+				if (!strlen(lpstr2)) strncpy_s(lpstr2, MAX_PATH, Strings[11], strlen(Strings[11]));
+
+				sprintf_s(lpstr1, MAX_PATH, "%s%02d (%s)", Strings[9], i, lpstr2);
+			}
+			else
+			{
+				sprintf_s(lpstr1, MAX_PATH, "%s%02d", Strings[9], i);
+			}
+		}
+
 		SendMessage(GetDlgItem(hwnd, 0xFFFC), CB_ADDSTRING, 0, (LPARAM) lpstr1);
 	}
 
@@ -1133,8 +1155,7 @@ void PlaceProgram(void)
 	CreateWindow("BUTTON", Strings[15], WS_TABSTOP | WS_CHILD | WS_VISIBLE, 180, 88, 64, 24, ProgramWindow, (HMENU) IDCANCEL, wc.hInstance, NULL);
 	for (i=0; i<10; i++)
 	{
-		strcpy(lpstr1, Strings[16]);
-		strcat(lpstr1, itoa(i, lpstr2, 10));
+		sprintf_s(lpstr1, MAX_PATH, "%s%d", Strings[16], i);
 		SendMessage(GetDlgItem(ProgramWindow, 0xFFFD), CB_ADDSTRING, 0, (LPARAM) lpstr1);
 	}
 	SendMessage(GetDlgItem(ProgramWindow, 0xFFFD), CB_ADDSTRING, 0, (LPARAM) Strings[10]);
@@ -1238,19 +1259,19 @@ void PlaceTempo(void)
 		return;
 	}
 
-	strcpy(lpstr3, Strings[18]);
+	strcpy_s(lpstr3, MAX_PATH, Strings[18]);
 	if (Preexistent)
 	{
 		i = (BYTE) lpstr1[0] * 65536 + (BYTE) lpstr1[1] * 256 + (BYTE) lpstr1[2];
-		strcpy(lpstr3, Strings[19]);
+		strcpy_s(lpstr3, MAX_PATH, Strings[19]);
 	}
 	else
 		if (MetaAction(META_SELECT, Track, -1, FILTER_TEMPO, lpstr1, 256))
 			i = (BYTE) lpstr1[0] * 65536 + (BYTE) lpstr1[1] * 256 + (BYTE) lpstr1[2];
 		else
 			i = 500000;
-	itoa(60000000 / i, lpstr1, 10);
-	itoa(i, lpstr2, 10);
+	sprintf_s(lpstr1, MAX_PATH, "%d", 60000000 / i);
+	sprintf_s(lpstr2, MAX_PATH, "%d", i);
 
 	TempoWindow = CreateWindow("TEMPOWINDOW", lpstr3, WS_CAPTION | WS_SYSMENU | WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - 118, GetSystemMetrics(SM_CYSCREEN) / 2 - 40, 236+2*GetSystemMetrics(SM_CXFIXEDFRAME), 80+GetSystemMetrics(SM_CYCAPTION)+2*GetSystemMetrics(SM_CYFIXEDFRAME), window, NULL, wc.hInstance, NULL);
 	CreateWindow("STATIC", Strings[20], WS_VISIBLE | WS_CHILD, 4, 4, 144, 20, TempoWindow, (HMENU) 0xFFF9, wc.hInstance, NULL);
@@ -1499,8 +1520,7 @@ void InsertTrack(void)
 	Track = (int) MidiGet(Sequence, TRACK_COUNT);
 	MidiInsertTrack(Sequence, Track);
 	ZeroMemory(&Events, sizeof(Events));
-	strcpy(lpstr1, Strings[22]);
-	strcat(lpstr1, itoa(Track+1, lpstr2, 10));
+	sprintf_s(lpstr1, MAX_PATH, "%s%d", Strings[22], Track+1);
 	Events[0].Event = 0x03;
 	Events[0].DataSize = (BYTE) strlen(lpstr1);
 	Events[0].Data.p = (LPBYTE) lpstr1;
@@ -1606,7 +1626,7 @@ BOOL FileNew(void)
 		CurrentPosition = 0;
 		CurrentNote = 64;
 		PlayButtonsAdjusted = FALSE;
-		strcpy(lpfile, "");
+		strcpy_s(lpfile, MAX_PATH, "");
 
 		MidiInsertTrack(Sequence, 0);
 		Events[0].Data.p = (LPBYTE) &trackSignature[0];
@@ -2265,16 +2285,7 @@ void DoRedraw(void)
 			Min = (int)(qwTime / 60000000);
 			Sec = (qwTime / 1000000) % 60;
 			Ms = (qwTime % 1000000) / 1000;
-			strcpy(lpstr1, "");
-			if (Min<10) strcat(lpstr1, "0");
-			strcat(lpstr1, itoa(Min, lpstr2, 10));
-			strcat(lpstr1, ":");
-			if (Sec<10) strcat(lpstr1, "0");
-			strcat(lpstr1, itoa(Sec, lpstr2, 10));
-			strcat(lpstr1, ":");
-			if (Ms<100) strcat(lpstr1, "0");
-			if (Ms<10) strcat(lpstr1, "0");
-			strcat(lpstr1, itoa(Ms, lpstr2, 10));
+			sprintf_s(lpstr1, MAX_PATH, "%02d:%02d:%03d", Min, Sec, Ms);
 			TextOut(buffer, Start, Ruler.top + 4, lpstr1, (int) strlen(lpstr1));
 
 		}
@@ -2329,7 +2340,7 @@ void DoRedraw(void)
 		if (Start>Limit) break;
 
 		Icon = -1;
-		strcpy(lpstr1, "");
+		strcpy_s(lpstr1, MAX_PATH, "");
 		DrawBlock1 = FALSE;
 		DrawBlock2 = FALSE;
 		qwFilter = lpFilters[i].qwFilter;
@@ -2394,15 +2405,20 @@ void DoRedraw(void)
 			SetTextColor(buffer, 0x000000);
 			Icon = ID_PROGRAM;
 			Long = TRUE;
-			GetInstrumentName(BankHigh, BankLow, Byte1, lpstr1);
+			GetInstrumentName(BankHigh, BankLow, Byte1, lpstr1, MAX_PATH);
 			if (!strlen(lpstr1))
 			{
-				strcpy(lpstr1, Strings[39]);
-				strcat(lpstr1, Strings[16]);
 				if (BankLow==-1) j=BankHigh; else j=BankLow;
-				strcat(lpstr1, itoa(j, lpstr2, 10));
-				strcat(lpstr1, Strings[40]);
-				strcat(lpstr1, itoa(Byte1, lpstr2, 10));
+				sprintf_s(
+					lpstr1,
+					MAX_PATH,
+					"%s%s%d%s%d",
+					Strings[39],
+					Strings[16],
+					j,
+					Strings[40],
+					Byte1
+				);
 			}
 			if ((Meta==ID_PROGRAM) && (Start==Selection.right)) Mask = ILD_SELECTED;
 			break;
@@ -2411,36 +2427,35 @@ void DoRedraw(void)
 			Icon = ID_TEMPO;
 			Long = TRUE;
 			j = (lpData[0] << 16) | (lpData[1] << 8) | lpData[2];
-			itoa(60000000 / j, lpstr1, 10);
-			strcat(lpstr1, Strings[41]);
+			sprintf_s(lpstr1, MAX_PATH, "%d%s", 60000000 / j, Strings[41]);
 			if ((Meta==ID_TEMPO) && (Start==Selection.right)) Mask = ILD_SELECTED;
 			break;
 		case FILTER_TEXT:
 			SetTextColor(buffer, 0x0000FF);
 			Icon = ID_TEXT;
 			Long = TRUE;
-			strncat(lpstr1, (const char*) lpData, DataSize);
+			strncat_s(lpstr1, MAX_PATH, (const char*) lpData, DataSize);
 			if ((Meta==ID_TEXT) && (Start==Selection.right)) Mask = ILD_SELECTED;
 			break;
 		case FILTER_LYRIC:
 			SetTextColor(buffer, 0x008000);
 			Icon = ID_LYRIC;
 			Long = TRUE;
-			strncat(lpstr1, (const char*) lpData, DataSize);
+			strncat_s(lpstr1, MAX_PATH, (const char*) lpData, DataSize);
 			if ((Meta==ID_LYRIC) && (Start==Selection.right)) Mask = ILD_SELECTED;
 			break;
 		case FILTER_MARKER:
 			SetTextColor(buffer, 0xFF0000);
 			Icon = ID_MARKER;
 			Long = TRUE;
-			strncat(lpstr1, (const char*) lpData, DataSize);
+			strncat_s(lpstr1, MAX_PATH, (const char*) lpData, DataSize);
 			if ((Meta==ID_MARKER) && (Start==Selection.right)) Mask = ILD_SELECTED;
 			break;
 		case FILTER_CUEPOINT:
 			SetTextColor(buffer, 0x008080);
 			Icon = ID_CUEPOINT;
 			Long = TRUE;
-			strncat(lpstr1, (const char*) lpData, DataSize);
+			strncat_s(lpstr1, MAX_PATH, (const char*) lpData, DataSize);
 			if ((Meta==ID_CUEPOINT) && (Start==Selection.right)) Mask = ILD_SELECTED;
 			break;
 		case FILTER_TRACKNAME: /* Just ignores */
@@ -2453,26 +2468,31 @@ void DoRedraw(void)
 			continue;
 		default: /* Error message */
 			SetTextColor(buffer, 0x800080);
-			strcpy(lpstr1, Strings[42]);
-			if (Event<16) strcat(lpstr1, "0");
-			strcat(lpstr1, itoa(Event,lpstr2, 16));
-			strcat(lpstr1, "): ");
+			sprintf_s(
+				lpstr1,
+				MAX_PATH,
+				"%s%02x): ",
+				Strings[42],
+				Event
+			);
 			if (Long)
 				for (j=0; j<DataSize; j++)
 				{
-					strcat(lpstr1, "0x");
-					if (lpData[j] < 16) strcat(lpstr1, "0");
-					strcat(lpstr1, itoa(lpData[j], lpstr2, 16));
-					strcat(lpstr1, " ");
+					sprintf_s(
+						lpstr1 + strlen(lpstr1),
+						MAX_PATH - strlen(lpstr1),
+						"0x%02x ",
+						lpData[j]
+					);
 				}
 			else
 			{
-				strcat(lpstr1, "0x");
-				if (Byte1 < 16) strcat(lpstr1, "0");
-				strcat(lpstr1, itoa(Byte1, lpstr2, 16));
-				strcat(lpstr1, " 0x");
-				if (Byte2 < 16) strcat(lpstr1, "0");
-				strcat(lpstr1, itoa(Byte2, lpstr2, 16));
+				sprintf_s(
+					lpstr1 + strlen(lpstr1),
+					MAX_PATH - strlen(lpstr1),
+					"0x%02x 0x%02x",
+					Byte1, Byte2
+				);
 			}
 			Icon = ID_UNKNOWN;
 			Long = TRUE;
@@ -2627,7 +2647,7 @@ void DoRedraw(void)
 		Rectangle(buffer, Piano.left, (int)(Piano.top + (LastNote-i)*KeyHeight), Piano.right, (int)(Piano.top + (LastNote-i+1)*KeyHeight + 1));
 		if (Key==0)
 		{
-			KeyText(i, lpstr1);
+			KeyText(i, lpstr1, MAX_PATH);
 			TextOut(buffer, 50, (int)(Piano.top + (LastNote-i)*KeyHeight), lpstr1, (int) strlen(lpstr1));
 		}
 	}
@@ -2635,7 +2655,7 @@ void DoRedraw(void)
 	/* Current note */
 	if ((Selection.bottom>=0) && (Selection.bottom<=127) && ((LastNote-Selection.bottom)>=0))
 	{
-		KeyText(Selection.bottom, lpstr1);
+		KeyText(Selection.bottom, lpstr1, MAX_PATH);
 		TextOut(buffer, 50, (int)(Piano.top + (LastNote - Selection.bottom) *KeyHeight), lpstr1, (int) strlen(lpstr1));
 	}
 
@@ -2645,7 +2665,7 @@ void DoRedraw(void)
 	/* Controller tool-tip */
 	if (CurrentController!=-1)
 	{
-		itoa(CurrentController, lpstr1,10);
+		sprintf_s(lpstr1, MAX_PATH, "%d", CurrentController);
 		GetTextExtentPoint32(hdc, lpstr1, (int) strlen(lpstr1), &size);
 		SelectObject(hdc, GetSysColorBrush(COLOR_INFOBK));
 		SelectObject(hdc, GetStockObject(BLACK_PEN));
@@ -2681,11 +2701,13 @@ void AdjustWindow(void)
 		MetaAction(META_SELECT, i, -1, FILTER_TRACKNAME, lpstr1, 256);
 		if (Channel!=-1)
 		{
-			strcat(lpstr1, " (");
-			GetInstrumentName(BankHigh, BankLow, Program, lpstr2);
-			if (!strlen(lpstr2)) strcat(strcpy(lpstr2, Strings[9]), itoa(Channel, lpstr3, 10));
-			strcat(lpstr1, lpstr2);
-			strcat(lpstr1, ")");
+			GetInstrumentName(BankHigh, BankLow, Program, lpstr2, MAX_PATH);
+			if (strlen(lpstr2)==0)
+			{
+				sprintf_s(lpstr2, MAX_PATH, "%s%d", Strings[9], Channel);
+			}
+
+			sprintf_s(lpstr1 + strlen(lpstr1), MAX_PATH - strlen(lpstr1), " (%s)", lpstr2);
 		}
 		SendMessage(GetDlgItem(window, ID_TRACK), CB_ADDSTRING, 0, (LPARAM) lpstr1);
 		GetTextExtentPoint32(GetDC(GetDlgItem(window, ID_TRACK)), lpstr1, (int) strlen(lpstr1), &size);
@@ -2693,7 +2715,10 @@ void AdjustWindow(void)
 	}
 
 	if (Beat % 16)
-		SetWindowText(GetDlgItem(window, ID_BEAT), strcat(itoa(Beat, lpstr1,10), Strings[43]));
+	{
+		sprintf_s(lpstr1, MAX_PATH, "%d%s", Beat, Strings[43]);
+		SetWindowText(GetDlgItem(window, ID_BEAT), lpstr1);
+	}
 	else
 		SendMessage(GetDlgItem(window, ID_BEAT), CB_SETCURSEL, (Beat >> 4) - 1, 0);
 
@@ -2797,16 +2822,10 @@ void AdjustScroll(void)
 void AdjustTitleBar(void)
 {
 	QWORD Time, MaxTime;
-	DWORD Ticks, MaxTicks, Min, Sec, Mil;
+	DWORD Ticks, MaxTicks;
 
-	strcpy(lpstr1, Strings[38]);
-	strcat(lpstr1, " [");
-	strcpy(lpstr2, "");
 	GetFileTitle(lpfile, lpstr2, 256);
-	if (strlen(lpstr2)==0) strcpy(lpstr2, Strings[57]);
-	strcat(lpstr1, lpstr2);
-	if (!Saved) strcat(lpstr1, Strings[44]);
-	strcat(lpstr1, "] - ");
+	if (strlen(lpstr2)==0) strcpy_s(lpstr2, MAX_PATH, Strings[57]);
 
 	if (MidiGet(Sequence, MIDI_STATUS)==MIDI_PLAY)
 		Time = MidiGet(Sequence, CURRENT_TIME);
@@ -2815,34 +2834,8 @@ void AdjustTitleBar(void)
 			Time = MidiQuery(Sequence, 0, MIDI_TIME, MIDI_TICKS, Selection.right);
 		else
 			Time = 0;
-	Min = Time / 60000000;
-	Sec = (Time / 1000000) % 60;
-	Mil = (Time % 1000000) / 1000;
-	if (Min<10) strcat(lpstr1, "0");
-	strcat(lpstr1, itoa(Min, lpstr2, 10));
-	strcat(lpstr1, ":");
-	if (Sec<10) strcat(lpstr1, "0");
-	strcat(lpstr1, itoa(Sec, lpstr2, 10));
-	strcat(lpstr1, ":");
-	if (Mil<100) strcat(lpstr1, "0");
-	if (Mil< 10) strcat(lpstr1, "0");
-	strcat(lpstr1, itoa(Mil, lpstr2, 10));
-	strcat(lpstr1, "/");
 
 	MaxTime = MidiGet(Sequence, TIME_COUNT);
-	Min = MaxTime / 60000000;
-	Sec = (MaxTime / 1000000) % 60;
-	Mil = (MaxTime % 1000000) / 1000;
-	if (Min<10) strcat(lpstr1, "0");
-	strcat(lpstr1, itoa(Min, lpstr2, 10));
-	strcat(lpstr1, ":");
-	if (Sec<10) strcat(lpstr1, "0");
-	strcat(lpstr1, itoa(Sec, lpstr2, 10));
-	strcat(lpstr1, ":");
-	if (Mil<100) strcat(lpstr1, "0");
-	if (Mil< 10) strcat(lpstr1, "0");
-	strcat(lpstr1, itoa(Mil, lpstr2, 10));
-	strcat(lpstr1, " - ");
 
 	if (MidiGet(Sequence, MIDI_STATUS)==MIDI_PLAY)
 		Ticks = (DWORD) MidiGet(Sequence, CURRENT_TICKS);
@@ -2851,12 +2844,21 @@ void AdjustTitleBar(void)
 			Ticks = Selection.right;
 		else
 			Ticks = 0;
-	strcat(lpstr1, itoa(Ticks, lpstr2, 10));
-	strcat(lpstr1, "/");
 
 	MaxTicks = (DWORD) MidiGet(Sequence, TICK_COUNT);
-	strcat(lpstr1, itoa(MaxTicks, lpstr2, 10));
-	strcat(lpstr1, Strings[43]);
+
+	sprintf_s(
+		lpstr1,
+		MAX_PATH,
+		"%s [%s%s] - %02lld:%02lld:%03lld/%02lld:%02lld:%03lld - %d/%d%s",
+		Strings[38],
+		lpstr2,
+		Saved ? "" : Strings[44],
+		Time / 60000000, (Time / 1000000) % 60, (Time % 1000000) / 1000,
+		MaxTime / 60000000, (MaxTime / 1000000) % 60, (MaxTime % 1000000) / 1000,
+		Ticks, MaxTicks,
+		Strings[43]
+	);
 	SetWindowText(window, lpstr1);
 }
 
@@ -2911,12 +2913,12 @@ void FilterSequence(void)
 
 	CreateWindowEx(WS_EX_CONTROLPARENT, "BUTTON", Strings[59], WS_CHILD | WS_VISIBLE | BS_GROUPBOX | WS_TABSTOP, 4, 4, 392, 48, filter, (HMENU) 0xFFF0, wc.hInstance, NULL);
 	ZeroMemory(lpstr1, MAX_PATH);
-	if (!strlen(lpfile)) strcpy(lpfile, Strings[57]);
+	if (!strlen(lpfile)) strcpy_s(lpfile, MAX_PATH, Strings[57]);
 	j = (int) strlen(lpfile)-1;
 	for (i=0; i<(int) strlen(lpfile); i++) if (lpfile[i]=='.') j=i;
-	strncpy(lpstr1, lpfile, j);
-	strcat(lpstr1, Strings[83]);
-	if (j!=(((int) strlen(lpfile))-1)) strcat(lpstr1, &lpfile[j]);
+	strncpy_s(lpstr1, MAX_PATH, lpfile, j);
+	strcat_s(lpstr1, MAX_PATH, Strings[83]);
+	if (j!=(((int) strlen(lpfile))-1)) strcat_s(lpstr1, MAX_PATH, &lpfile[j]);
 	CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", lpstr1, WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_AUTOHSCROLL, 8, 20, 308, 20, GetDlgItem(filter, 0xFFF0), (HMENU) 0xFFF1, wc.hInstance, NULL);
 	CreateWindow("BUTTON", Strings[60], WS_CHILD | WS_VISIBLE | WS_TABSTOP, 320, 16, 64, 24, GetDlgItem(filter, 0xFFF0), (HMENU) 0xFFF2, wc.hInstance, NULL);
 	SetWindowLongPtr(GetDlgItem(filter, 0xFFF0), GWLP_USERDATA, SetWindowLongPtr(GetDlgItem(filter, 0xFFF0), GWLP_WNDPROC, (LONG_PTR) GroupBoxProc));
@@ -2929,17 +2931,13 @@ void FilterSequence(void)
 	CreateWindow("STATIC", ":", WS_CHILD | WS_VISIBLE, 64, 36, 4, 16, GetDlgItem(filter, 0xFFF3), NULL, wc.hInstance, NULL);
 	CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "000", WS_TABSTOP | ES_NUMBER | WS_CHILD | WS_VISIBLE, 72, 32, 28, 20, GetDlgItem(filter, 0xFFF3), (HMENU) 0xFFF6, wc.hInstance, NULL);
 	CreateWindow("STATIC", Strings[63], WS_CHILD | WS_VISIBLE, 136, 16, 32, 16, GetDlgItem(filter, 0xFFF3), NULL, wc.hInstance, NULL);
-	if (min < 10) strcpy(lpstr1, "0"); else strcpy(lpstr1, "");
-	strcat(lpstr1, itoa(min, lpstr2, 10));
+	sprintf_s(lpstr1, MAX_PATH, "%02d", min);
 	CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", lpstr1, WS_TABSTOP | ES_NUMBER | WS_CHILD | WS_VISIBLE, 136, 32, 20, 20, GetDlgItem(filter, 0xFFF3), (HMENU) 0xFFF7, wc.hInstance, NULL);
 	CreateWindow("STATIC", ":", WS_CHILD | WS_VISIBLE, 160, 36, 4, 16, GetDlgItem(filter, 0xFFF3), NULL, wc.hInstance, NULL);
-	if (sec < 10) strcpy(lpstr1, "0"); else strcpy(lpstr1, "");
-	strcat(lpstr1, itoa(sec, lpstr2, 10));
+	sprintf_s(lpstr1, MAX_PATH, "%02d", sec);
 	CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", lpstr1, WS_TABSTOP | ES_NUMBER | WS_CHILD | WS_VISIBLE, 168, 32, 20, 20, GetDlgItem(filter, 0xFFF3), (HMENU) 0xFFF8, wc.hInstance, NULL);
 	CreateWindow("STATIC", ":", WS_CHILD | WS_VISIBLE, 192, 36, 4, 16, GetDlgItem(filter, 0xFFF3), NULL, wc.hInstance, NULL);
-	if (ms < 10) strcpy(lpstr1, "0"); else strcpy(lpstr1, "");
-	if (ms < 100) strcat(lpstr1, "0");
-	strcat(lpstr1, itoa(ms, lpstr2, 10));
+	sprintf_s(lpstr1, MAX_PATH, "%03d", ms);
 	CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", lpstr1, WS_TABSTOP | ES_NUMBER | WS_CHILD | WS_VISIBLE, 200, 32, 28, 20, GetDlgItem(filter, 0xFFF3), (HMENU) 0xFFF9, wc.hInstance, NULL);
 	CreateWindow("BUTTON", Strings[64], WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX, 264, 36, 120, 16, GetDlgItem(filter, 0xFFF3), (HMENU) 0xFFFA, wc.hInstance, NULL);
 
@@ -2954,10 +2952,7 @@ void FilterSequence(void)
 	for (i=0; i < (int) MidiGet(Sequence, TRACK_COUNT); i++)
 	{
 		MetaAction(META_SELECT, i, -1, FILTER_TRACKNAME, lpstr1, 256);
-		if (i<9) strcpy(lpstr2, "0"); else strcpy(lpstr2, "");
-		strcat(lpstr2, itoa(i+1, lpstr3, 10));
-		strcat(lpstr2, " - ");
-		strcat(lpstr2, lpstr1);
+		sprintf_s(lpstr2, MAX_PATH, "%02d - %s", i+1, lpstr1);
 		SendMessage(GetDlgItem(GetDlgItem(filter, 0xFFFD), 0xFFFE), LB_ADDSTRING, 0, (LPARAM) lpstr2);
 	}
 	SendMessage(GetDlgItem(GetDlgItem(filter, 0xFFFD), 0xFFFE), LB_SETSEL, TRUE, -1);
@@ -3251,7 +3246,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			i = -1;
 			if (MetaAction(META_SELECT, Track, -1, FILTER_SEQUENCENUMBER, lpstr1, 256))
 				i = (lpstr1[0] << 8) | (lpstr1[1]);
-			itoa(i, lpstr1, 10);
+			sprintf_s(lpstr1, MAX_PATH, "%d", i);
 			if (InputBox(window, Strings[50], Strings[51], lpstr1)==IDOK)
 			{
 				i = (WORD) atoi(lpstr1);
@@ -3549,8 +3544,10 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 
 	for (i=0; i<200; i++)
 	{
-		SendMessage(GetDlgItem(window, ID_ZOOM), CB_ADDSTRING, 0, (LPARAM) strcat(itoa((i+1) * 5, lpstr1, 10), "%"));
-		SendMessage(GetDlgItem(window, ID_BEAT), CB_ADDSTRING, 0, (LPARAM) strcat(itoa((i+1) * 16, lpstr1, 10), Strings[43]));
+		sprintf_s(lpstr1, MAX_PATH, "%d%s", (i+1) * 5, "%");
+		SendMessage(GetDlgItem(window, ID_ZOOM), CB_ADDSTRING, 0, (LPARAM) lpstr1);
+		sprintf_s(lpstr1, MAX_PATH, "%d%s", (i+1) * 16, Strings[43]);
+		SendMessage(GetDlgItem(window, ID_BEAT), CB_ADDSTRING, 0, (LPARAM) lpstr1);
 	}
 
 	Saved = TRUE;

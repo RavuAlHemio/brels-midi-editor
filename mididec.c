@@ -24,6 +24,7 @@
 
 #include <windows.h>
 #include <richedit.h>
+#include <stdio.h>
 #include "brlsmidi.h"
 #include "mididec.h"
 
@@ -134,24 +135,18 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 
 	wTracks = (WORD) MidiGet(decSequence, TRACK_COUNT);
 
-	strcpy(lpdecstr1, "'\xFF' replaces byte 0x00.\r\n\r\n");
+	strcpy_s(lpdecstr1, MAX_PATH, "'\xFF' replaces byte 0x00.\r\n\r\n");
 	Position = strlen(lpdecstr1);
 	for (i=0; i<wTracks; i++)
 	{
-		SetWindowText(decwindow, strcat(gcvt(i * 100.00l / wTracks, 4, lpdecstr2), "%"));
+		sprintf_s(lpdecstr2, MAX_PATH, "%.4g%s", i * 100.00l / wTracks, "%");
+		SetWindowText(decwindow, lpdecstr2);
 
 		Delta = 0;
 		nEvents = (DWORD) MidiTrackGet(decSequence, (WORD) i, EVENT_COUNT);
 		MidiGetTrackEvents(decSequence, (WORD) i, 0, nEvents-1, MIDI_INDEX, &lpBuffer);
 
-		strcpy(&lpdecstr1[Position], "Track ");
-		Position+=6;
-
-		strcpy(&lpdecstr1[Position], itoa(i, lpdecstr2, 10));
-		Position+=strlen(lpdecstr2);
-
-		strcpy(&lpdecstr1[Position], ":\r\n");
-		Position+=3;
+		Position+=sprintf_s(&lpdecstr1[Position], MAX_PATH-Position, "Track %d:\r\n", i);
 
 		maxDataSize = 2;
 		for (j=0; j<nEvents; j++)
@@ -163,18 +158,13 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 
 		for (j=0; j<nEvents; j++)
 		{
-
-			strcpy(&lpdecstr1[Position], itoa(lpBuffer[j].dwTicks /*- Delta */, lpdecstr2,10));
-			Position+=strlen(lpdecstr2);
-
-			strcpy(&lpdecstr1[Position], ":\t");
-			Position+=2;
-
-			strcpy(&lpdecstr1[Position], itoa(lpBuffer[j].Event, lpdecstr2, 16));
-			Position+=strlen(lpdecstr2);
-
-			strcpy(&lpdecstr1[Position], "\t");
-			Position++;
+			Position+=sprintf_s(
+				&lpdecstr1[Position],
+				MAX_PATH-Position,
+				"%d:\t%x\t",
+				lpBuffer[j].dwTicks /*- Delta */,
+				lpBuffer[j].Event
+			);
 
 			Delta = lpBuffer[j].dwTicks;
 
@@ -182,7 +172,7 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 			{
 				CopyMemory(&lpdecstr1[Position], lpBuffer[j].Data.p, lpBuffer[j].DataSize);
 				Position+=lpBuffer[j].DataSize;
-				strncpy(&lpdecstr1[Position], &maxDataSizePadding[0], maxDataSize-lpBuffer[j].DataSize+2);
+				strncpy_s(&lpdecstr1[Position], MAX_PATH-Position, &maxDataSizePadding[0], maxDataSize-lpBuffer[j].DataSize+2);
 				Position+=(maxDataSize-lpBuffer[j].DataSize+2);
 				for (k=0; k<lpBuffer[j].DataSize; k++)
 				{
@@ -238,12 +228,12 @@ int DecoderDialog(HWND hwndParent, HANDLE Sequence)
 				Position++;
 				*/
 			}
-			strcpy(&lpdecstr1[Position], "\r\n");
+			strcpy_s(&lpdecstr1[Position], MAX_PATH-Position, "\r\n");
 			Position+=2;
 		}
 		
 		HeapFree(GetProcessHeap(), 0, maxDataSizePadding);
-		strcpy(&lpdecstr1[Position], "\r\n\r\n");
+		strcpy_s(&lpdecstr1[Position], MAX_PATH-Position, "\r\n\r\n");
 		Position+=4;
 		MidiCleanEvents(nEvents, lpBuffer);
 	}
