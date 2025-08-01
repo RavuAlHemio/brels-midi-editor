@@ -128,7 +128,15 @@
 typedef ULONGLONG QWORD, *LPQWORD;
 
 
+#ifdef _MSC_VER
+# define __attribute__(x)
+#endif
+
+
 /* MIDI header as found in a MIDI file */
+#ifdef _MSC_VER
+# pragma pack(push, 1)
+#endif
 typedef struct
 {
 	DWORD dwMagic;
@@ -138,6 +146,9 @@ typedef struct
 	WORD  wBeatSize;
 }  __attribute__ ((packed, aligned(1)))
 BRELS_MIDI_HEADER, *LPBRELS_MIDI_HEADER;
+#ifdef _MSC_VER
+# pragma pack(pop)
+#endif
 
 
 /* MIDI track header as found in a MIDI file */
@@ -149,6 +160,9 @@ typedef struct
 
 
 /* BRELS style MIDI Event */
+#ifdef _MSC_VER
+# pragma pack(push, 1)
+#endif
 typedef struct
 {
 	WORD wTag;
@@ -162,6 +176,9 @@ typedef struct
 	} Data;
 } __attribute__ ((packed, aligned(1)))
 BRELS_MIDI_EVENT, *LPBRELS_MIDI_EVENT;
+#ifdef _MSC_VER
+# pragma pack(pop)
+#endif
 
 
 /* Filtered event for simplification */
@@ -172,12 +189,18 @@ typedef struct
 	QWORD qwEnd;
 } BRELS_FILTERED_EVENT, *LPBRELS_FILTERED_EVENT;
 
+#ifdef _MSC_VER
+# pragma pack(push, 1)
+#endif
 typedef struct
 {
 	WORD wTrack;
 	DWORD dwEvent;
 } __attribute__ ((packed, aligned(1)))
 BRELS_TEMPO, *LPBRELS_TEMPO;
+#ifdef _MSC_VER
+# pragma pack(pop)
+#endif
 
 
 BOOL  WINAPI MidiOpen(LPSTR lpstrFile, DWORD dwDevice, LPHANDLE lphSequence);
