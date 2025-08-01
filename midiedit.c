@@ -262,7 +262,7 @@ char* trim(char* src)
 	return src;
 }
 
-double round(double value)
+double my_round(double value)
 {
 	double fl, cl;
 	if ((value - (fl=floor(value))) > ((cl=ceil(value))-value))
@@ -594,7 +594,7 @@ void ResizeTrack(WORD wTrack, WORD NewBeat, WORD OldBeat)
 	nFilters = MidiFilterTrackEvents(Sequence, wTrack, 0, nEvents-1, MIDI_INDEX, FILTER_NOTES, &lpFilters);
 
 	for (i=0; i<nEvents; i++)
-		lpEvents[i].dwTicks = (DWORD) round(lpEvents[i].dwTicks * Factor);
+		lpEvents[i].dwTicks = (DWORD) my_round(lpEvents[i].dwTicks * Factor);
 
 	/* Fixes zero-length notes */
 	for (i=0; i<nFilters; i++)
@@ -2998,7 +2998,7 @@ void FilterTrack(HANDLE NewHandle, WORD wSrcTrack, WORD wDstTrack, QWORD qwBase,
 	{
 		lpNew[nNew]=lpEvents[lpFilter[i].qwStart];
 		lpNew[nNew].dwTicks = (DWORD)(lpNew[nNew].dwTicks-qwStart + qwBase);
-		if (RoundTicks) lpNew[nNew].dwTicks = (DWORD) round(lpNew[nNew].dwTicks*Factor);
+		if (RoundTicks) lpNew[nNew].dwTicks = (DWORD) my_round(lpNew[nNew].dwTicks*Factor);
 		nNew++;
 		if (lpFilter[i].qwFilter == FILTER_NOTES)
 		{
@@ -3008,7 +3008,7 @@ void FilterTrack(HANDLE NewHandle, WORD wSrcTrack, WORD wDstTrack, QWORD qwBase,
 			lpNew[nNew].Data.a[1] = 0;
 			if (lpNew[nNew].dwTicks > qwEnd) lpNew[nNew].dwTicks = (DWORD) qwEnd;
 			lpNew[nNew].dwTicks = (DWORD)(lpNew[nNew].dwTicks-qwStart + qwBase);
-			if (RoundTicks) lpNew[nNew].dwTicks = (DWORD) round(lpNew[nNew].dwTicks*Factor);
+			if (RoundTicks) lpNew[nNew].dwTicks = (DWORD) my_round(lpNew[nNew].dwTicks*Factor);
 			nNew++;
 		}
 	}
