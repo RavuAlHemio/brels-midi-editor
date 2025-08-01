@@ -78,7 +78,7 @@ void CALLBACK PlayProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
 void PlayCallback(LPBRELS_MIDI_SEQUENCE lpSequence, BOOL Ignore);
 int Compare(void* data1, void* data2);
 
-BOOL  WINAPI __declspec(dllexport) MidiOpen(LPSTR lpstrFile, DWORD dwDevice, LPHANDLE lphSequence)
+__declspec(dllexport) BOOL WINAPI MidiOpen(LPSTR lpstrFile, DWORD dwDevice, LPHANDLE lphSequence)
 {
 	int i, j, Offset, Position, RunningStatus, Ticks, Event;
 	DWORD dwOutput, Delta, nEvents;
@@ -292,7 +292,7 @@ BOOL  WINAPI __declspec(dllexport) MidiOpen(LPSTR lpstrFile, DWORD dwDevice, LPH
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiClose(HANDLE hSequence)
+__declspec(dllexport) BOOL WINAPI MidiClose(HANDLE hSequence)
 {
 	int i;
 	MSG msg;
@@ -323,7 +323,7 @@ BOOL  WINAPI __declspec(dllexport) MidiClose(HANDLE hSequence)
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiCreate(DWORD dwDevice, WORD wBeatSize, LPHANDLE lphSequence)
+__declspec(dllexport) BOOL WINAPI MidiCreate(DWORD dwDevice, WORD wBeatSize, LPHANDLE lphSequence)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 	LARGE_INTEGER qwQuery;
@@ -373,7 +373,7 @@ BOOL  WINAPI __declspec(dllexport) MidiCreate(DWORD dwDevice, WORD wBeatSize, LP
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiEncode(HANDLE hSequence, LPSTR lpstrFile, BOOL OverWrite)
+__declspec(dllexport) BOOL WINAPI MidiEncode(HANDLE hSequence, LPSTR lpstrFile, BOOL OverWrite)
 {
 	int i;
 	LPBYTE lpData;
@@ -420,7 +420,7 @@ BOOL  WINAPI __declspec(dllexport) MidiEncode(HANDLE hSequence, LPSTR lpstrFile,
 }
 
 
-BOOL  WINAPI __declspec(dllexport) MidiNext(HANDLE hSequence)
+__declspec(dllexport) BOOL WINAPI MidiNext(HANDLE hSequence)
 {
 	int Finalizadas, Ignoradas, i;
 	double Elapsed;
@@ -520,7 +520,7 @@ BOOL  WINAPI __declspec(dllexport) MidiNext(HANDLE hSequence)
 	return Played;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiSuspend(HANDLE hSequence, BOOL Synchronize)
+__declspec(dllexport) BOOL WINAPI MidiSuspend(HANDLE hSequence, BOOL Synchronize)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 
@@ -536,7 +536,7 @@ BOOL  WINAPI __declspec(dllexport) MidiSuspend(HANDLE hSequence, BOOL Synchroniz
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiResume(HANDLE hSequence, BOOL Modified)
+__declspec(dllexport) BOOL WINAPI MidiResume(HANDLE hSequence, BOOL Modified)
 {
 	int i;
 	LPBRELS_MIDI_SEQUENCE lpSequence;
@@ -553,7 +553,7 @@ BOOL  WINAPI __declspec(dllexport) MidiResume(HANDLE hSequence, BOOL Modified)
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiSilence(HANDLE hSequence)
+__declspec(dllexport) BOOL WINAPI MidiSilence(HANDLE hSequence)
 {
 	int i;
 	LPBRELS_MIDI_SEQUENCE lpSequence;
@@ -566,7 +566,7 @@ BOOL  WINAPI __declspec(dllexport) MidiSilence(HANDLE hSequence)
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiReset(HANDLE hSequence)
+__declspec(dllexport) BOOL WINAPI MidiReset(HANDLE hSequence)
 {
 	int i;
 	LPBRELS_MIDI_SEQUENCE lpSequence;
@@ -588,7 +588,7 @@ BOOL  WINAPI __declspec(dllexport) MidiReset(HANDLE hSequence)
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiPlay(HANDLE hSequence)
+__declspec(dllexport) BOOL WINAPI MidiPlay(HANDLE hSequence)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 	DWORD old;
@@ -608,7 +608,7 @@ BOOL  WINAPI __declspec(dllexport) MidiPlay(HANDLE hSequence)
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiPause(HANDLE hSequence)
+__declspec(dllexport) BOOL WINAPI MidiPause(HANDLE hSequence)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 
@@ -625,7 +625,7 @@ BOOL  WINAPI __declspec(dllexport) MidiPause(HANDLE hSequence)
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiStop(HANDLE hSequence)
+__declspec(dllexport) BOOL WINAPI MidiStop(HANDLE hSequence)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 
@@ -643,7 +643,7 @@ BOOL  WINAPI __declspec(dllexport) MidiStop(HANDLE hSequence)
 }
 
 
-BOOL  WINAPI __declspec(dllexport) MidiInsertTrack(HANDLE hSequence, WORD wTrack)
+__declspec(dllexport) BOOL WINAPI MidiInsertTrack(HANDLE hSequence, WORD wTrack)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 	LPBRELS_MIDI_TRACK lpNew;
@@ -681,7 +681,7 @@ BOOL  WINAPI __declspec(dllexport) MidiInsertTrack(HANDLE hSequence, WORD wTrack
 	return TRUE;
 }
 
-BOOL  WINAPI __declspec(dllexport) MidiRemoveTrack(HANDLE hSequence, WORD wTrack)
+__declspec(dllexport) BOOL WINAPI MidiRemoveTrack(HANDLE hSequence, WORD wTrack)
 {
 	int i, New;
 	LPBRELS_MIDI_SEQUENCE lpSequence;
@@ -736,7 +736,7 @@ int Compare(void* data1, void* data2)
 		return 1-2*(Event1->dwTicks < Event2->dwTicks);
 }
 
-DWORD WINAPI __declspec(dllexport) MidiInsertTrackEvents(HANDLE hSequence, WORD wTrack, DWORD dwEvents, LPBRELS_MIDI_EVENT lpEvents)
+__declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD wTrack, DWORD dwEvents, LPBRELS_MIDI_EVENT lpEvents)
 {
 	int i, Offset, Ticks;
 	DWORD nEvents;
@@ -798,7 +798,7 @@ DWORD WINAPI __declspec(dllexport) MidiInsertTrackEvents(HANDLE hSequence, WORD 
 	return Offset;
 }
 
-DWORD WINAPI __declspec(dllexport) MidiRemoveTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat)
+__declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat)
 {
 	int i, Ticks, Final, Inicial;
 	DWORD Affected;
@@ -892,7 +892,7 @@ DWORD WINAPI __declspec(dllexport) MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 	return Affected;
 }
 
-DWORD WINAPI __declspec(dllexport) MidiGetTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, LPBRELS_MIDI_EVENT* lpEvents)
+__declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, LPBRELS_MIDI_EVENT* lpEvents)
 {
 	int i, Final, Inicial;
 	DWORD Affected;
@@ -954,7 +954,7 @@ DWORD WINAPI __declspec(dllexport) MidiGetTrackEvents(HANDLE hSequence, WORD wTr
 	return Affected;
 }
 
-DWORD WINAPI __declspec(dllexport) MidiFilterTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, QWORD qwFilter, LPBRELS_FILTERED_EVENT* lpFilteredEvents)
+__declspec(dllexport) DWORD WINAPI MidiFilterTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, QWORD qwFilter, LPBRELS_FILTERED_EVENT* lpFilteredEvents)
 {
 	int i, j, k, Final, Inicial;
 	int Key, Count[128], Velocity, EarlyTempo;
@@ -1125,7 +1125,7 @@ DWORD WINAPI __declspec(dllexport) MidiFilterTrackEvents(HANDLE hSequence, WORD 
 	return Offset;
 }
 
-DWORD WINAPI __declspec(dllexport) MidiCleanEvents(DWORD dwEvents, LPBRELS_MIDI_EVENT lpEvents)
+__declspec(dllexport) DWORD WINAPI MidiCleanEvents(DWORD dwEvents, LPBRELS_MIDI_EVENT lpEvents)
 {
 	int i;
 	DWORD Affected;
@@ -1148,13 +1148,13 @@ DWORD WINAPI __declspec(dllexport) MidiCleanEvents(DWORD dwEvents, LPBRELS_MIDI_
 	return Affected;
 }
 
-BOOL WINAPI __declspec(dllexport) MidiFreeBuffer(LPVOID lpBuffer)
+__declspec(dllexport) BOOL WINAPI MidiFreeBuffer(LPVOID lpBuffer)
 {
 	/*if (IsBadCodePtr((FARPROC) lpBuffer)) return FALSE;*/
 	return HeapFree(GetProcessHeap(), 0, lpBuffer);
 }
 
-QWORD WINAPI __declspec(dllexport) MidiGet(HANDLE hSequence, DWORD dwWhat)
+__declspec(dllexport) QWORD WINAPI MidiGet(HANDLE hSequence, DWORD dwWhat)
 {
 	int i;
 	QWORD Retorno;
@@ -1253,7 +1253,7 @@ QWORD WINAPI __declspec(dllexport) MidiGet(HANDLE hSequence, DWORD dwWhat)
 	return Retorno;
 }
 
-QWORD WINAPI __declspec(dllexport) MidiTrackGet(HANDLE hSequence, WORD wTrack, DWORD dwWhat)
+__declspec(dllexport) QWORD WINAPI MidiTrackGet(HANDLE hSequence, WORD wTrack, DWORD dwWhat)
 {
 	QWORD Retorno;
 	QWORD* temp;
@@ -1301,7 +1301,7 @@ QWORD WINAPI __declspec(dllexport) MidiTrackGet(HANDLE hSequence, WORD wTrack, D
 	return Retorno;
 }
 
-QWORD WINAPI __declspec(dllexport) MidiEventGet(HANDLE hSequence, WORD wTrack, DWORD dwEvent, DWORD dwWhat)
+__declspec(dllexport) QWORD WINAPI MidiEventGet(HANDLE hSequence, WORD wTrack, DWORD dwEvent, DWORD dwWhat)
 {
 	QWORD Retorno;
 	LPBYTE lpBuffer;
@@ -1347,7 +1347,7 @@ QWORD WINAPI __declspec(dllexport) MidiEventGet(HANDLE hSequence, WORD wTrack, D
 	return Retorno;
 }
 
-QWORD WINAPI __declspec(dllexport) MidiSet(HANDLE hSequence, DWORD dwWhat, QWORD qwValue)
+__declspec(dllexport) QWORD WINAPI MidiSet(HANDLE hSequence, DWORD dwWhat, QWORD qwValue)
 {
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 	WORD newDelta;
@@ -1452,7 +1452,7 @@ QWORD WINAPI __declspec(dllexport) MidiSet(HANDLE hSequence, DWORD dwWhat, QWORD
 	return Retorno;
 }
 
-QWORD WINAPI __declspec(dllexport) MidiTrackSet(HANDLE hSequence, WORD wTrack, DWORD dwWhat, QWORD qwValue)
+__declspec(dllexport) QWORD WINAPI MidiTrackSet(HANDLE hSequence, WORD wTrack, DWORD dwWhat, QWORD qwValue)
 {
 	int i, Channels[16];
 	QWORD Retorno;
@@ -1501,7 +1501,7 @@ QWORD WINAPI __declspec(dllexport) MidiTrackSet(HANDLE hSequence, WORD wTrack, D
 	return Retorno;
 }
 
-QWORD WINAPI __declspec(dllexport) MidiEventSet(HANDLE hSequence, WORD wTrack, DWORD dwEvent, DWORD dwWhat, QWORD qwValue)
+__declspec(dllexport) QWORD WINAPI MidiEventSet(HANDLE hSequence, WORD wTrack, DWORD dwEvent, DWORD dwWhat, QWORD qwValue)
 {
 	QWORD Retorno;
 	LPBRELS_MIDI_SEQUENCE lpSequence;
@@ -1528,7 +1528,7 @@ QWORD WINAPI __declspec(dllexport) MidiEventSet(HANDLE hSequence, WORD wTrack, D
 }
 
 
-QWORD WINAPI __declspec(dllexport) MidiQuery(HANDLE hSequence, WORD wTrack, DWORD dwWhat, DWORD dwFrom, QWORD qwValue)
+__declspec(dllexport) QWORD WINAPI MidiQuery(HANDLE hSequence, WORD wTrack, DWORD dwWhat, DWORD dwFrom, QWORD qwValue)
 {
 	DWORD i, Track, Event;
 	QWORD Retorno;
@@ -1653,7 +1653,7 @@ QWORD WINAPI __declspec(dllexport) MidiQuery(HANDLE hSequence, WORD wTrack, DWOR
 	return Retorno;
 }
 
-WORD WINAPI __declspec(dllexport) btlw(WORD big)
+__declspec(dllexport) WORD WINAPI btlw(WORD big)
 {
 	WORD A, B;
 	A = big >> 8;
@@ -1661,7 +1661,7 @@ WORD WINAPI __declspec(dllexport) btlw(WORD big)
 	return (B << 8) | A ;
 }
 
-DWORD WINAPI __declspec(dllexport) btldw(DWORD big)
+__declspec(dllexport) DWORD WINAPI btldw(DWORD big)
 {
 	DWORD A, B, C, D;
 	A = (big >> 24) & 0xFF;
