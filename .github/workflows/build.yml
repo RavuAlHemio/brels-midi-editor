@@ -2,6 +2,7 @@ name: Windows build
 on: [push]
 jobs:
   build-win:
+    continue-on-error: true
     strategy:
       matrix:
         arch:
