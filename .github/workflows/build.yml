@@ -22,7 +22,7 @@ jobs:
       - name: make build directory
         run: mkdir build
       - name: generate build files
-        run: cd build && echo cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$(Get-Location)\install ..
+        run: cd build && echo cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$((Get-Location).Path)\install ..
       - name: build
         run: cd build && ninja
       - name: collect installation
