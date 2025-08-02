@@ -14,7 +14,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: set up Visual C++ paths
-        uses: ilammy/msvc-dev-cmd
+        uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: ${{ matrix.arch }}
       - name: check out repository code
