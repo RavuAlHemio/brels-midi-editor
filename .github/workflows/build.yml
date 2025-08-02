@@ -1,0 +1,35 @@
+name: Windows build
+on: [push]
+jobs:
+  build-win:
+    continue-on-error: true
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - amd64_x86
+          - amd64_arm64
+        build_type:
+          - Release
+          - Debug
+    runs-on: windows-latest
+    steps:
+      - name: set up Visual C++ paths
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+      - name: check out repository code
+        uses: actions/checkout@v4
+      - name: make build directory
+        run: mkdir build
+      - name: generate build files
+        run: cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX="$((Get-Location).Path)\..\install" ..
+      - name: build
+        run: cd build && ninja
+      - name: collect installation
+        run: cd build && ninja install
+      - name: upload installation archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: midiedit-${{ matrix.arch }}-${{ matrix.build_type }}
+          path: install
