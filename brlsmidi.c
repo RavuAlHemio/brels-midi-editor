@@ -78,7 +78,7 @@ void CALLBACK PlayProc(UINT uID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWO
 void PlayCallback(LPBRELS_MIDI_SEQUENCE lpSequence, BOOL Ignore);
 int Compare(void* data1, void* data2);
 
-__declspec(dllexport) BOOL WINAPI MidiOpen(LPSTR lpstrFile, DWORD dwDevice, LPHANDLE lphSequence)
+__declspec(dllexport) BOOL WINAPI MidiOpen(LPCSTR lpstrFile, DWORD dwDevice, LPHANDLE lphSequence)
 {
 	int i, j, Offset, Position, RunningStatus, Ticks, Event;
 	DWORD dwOutput, Delta, nEvents;
@@ -373,7 +373,7 @@ __declspec(dllexport) BOOL WINAPI MidiCreate(DWORD dwDevice, WORD wBeatSize, LPH
 	return TRUE;
 }
 
-__declspec(dllexport) BOOL WINAPI MidiEncode(HANDLE hSequence, LPSTR lpstrFile, BOOL OverWrite)
+__declspec(dllexport) BOOL WINAPI MidiEncode(HANDLE hSequence, LPCSTR lpstrFile, BOOL OverWrite)
 {
 	int i;
 	LPBYTE lpData;
@@ -736,7 +736,7 @@ int Compare(void* data1, void* data2)
 		return 1-2*(Event1->dwTicks < Event2->dwTicks);
 }
 
-__declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD wTrack, DWORD dwEvents, LPBRELS_MIDI_EVENT lpEvents)
+__declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD wTrack, DWORD dwEvents, LPCBRELS_MIDI_EVENT lpEvents)
 {
 	int i, Offset, Ticks;
 	DWORD nEvents;

@@ -179,6 +179,7 @@ BRELS_MIDI_EVENT, *LPBRELS_MIDI_EVENT;
 #ifdef _MSC_VER
 # pragma pack(pop)
 #endif
+typedef const BRELS_MIDI_EVENT* LPCBRELS_MIDI_EVENT;
 
 
 /* Filtered event for simplification */
@@ -203,10 +204,10 @@ BRELS_TEMPO, *LPBRELS_TEMPO;
 #endif
 
 
-__declspec(dllexport) BOOL  WINAPI MidiOpen(LPSTR lpstrFile, DWORD dwDevice, LPHANDLE lphSequence);
+__declspec(dllexport) BOOL  WINAPI MidiOpen(LPCSTR lpstrFile, DWORD dwDevice, LPHANDLE lphSequence);
 __declspec(dllexport) BOOL  WINAPI MidiClose(HANDLE hSequence);
 __declspec(dllexport) BOOL  WINAPI MidiCreate(DWORD dwDevice, WORD wBeatSize, LPHANDLE lphSequence);
-__declspec(dllexport) BOOL  WINAPI MidiEncode(HANDLE hSequence, LPSTR lpstrFile, BOOL OverWrite);
+__declspec(dllexport) BOOL  WINAPI MidiEncode(HANDLE hSequence, LPCSTR lpstrFile, BOOL OverWrite);
 
 __declspec(dllexport) BOOL  WINAPI MidiPlay(HANDLE hSequence);
 __declspec(dllexport) BOOL  WINAPI MidiPause(HANDLE hSequence);
@@ -219,7 +220,7 @@ __declspec(dllexport) BOOL  WINAPI MidiReset(HANDLE hSequence);
 
 __declspec(dllexport) BOOL  WINAPI MidiInsertTrack(HANDLE hSequence, WORD wTrack);
 __declspec(dllexport) BOOL  WINAPI MidiRemoveTrack(HANDLE hSequence, WORD wTrack);
-__declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD wTrack, DWORD dwEvents, LPBRELS_MIDI_EVENT lpEvents);
+__declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD wTrack, DWORD dwEvents, LPCBRELS_MIDI_EVENT lpEvents);
 __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat);
 __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, LPBRELS_MIDI_EVENT* lpEvents);
 __declspec(dllexport) DWORD WINAPI MidiFilterTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, QWORD qwFilter, LPBRELS_FILTERED_EVENT* lpFilteredEvents);
