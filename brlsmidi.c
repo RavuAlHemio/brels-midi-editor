@@ -800,8 +800,9 @@ __declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD 
 
 __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat)
 {
-	int i, Ticks, Final, Inicial;
-	DWORD Affected;
+	int Ticks;
+	SSIZE_T Final, Inicial, Affected;
+	SIZE_T i;
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 	LPBRELS_MIDI_EVENT lpNew;
 
@@ -818,8 +819,8 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 	case MIDI_INDEX:
 		if ((qwFirst<lpSequence->Tracks[wTrack].dwEvents) && (qwLast<lpSequence->Tracks[wTrack].dwEvents))
 		{
-			Inicial = (int) qwFirst;
-			Final = (int) qwLast;
+			Inicial = (SSIZE_T) qwFirst;
+			Final = (SSIZE_T) qwLast;
 		}
 		else
 		{
@@ -827,7 +828,7 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 		}
 		break;
 	case MIDI_TICKS:
-		for (i=0; i<(int) lpSequence->Tracks[wTrack].dwEvents; i++)
+		for (i=0; i<lpSequence->Tracks[wTrack].dwEvents; i++)
 		{
 			if (lpSequence->Tracks[wTrack].Events[lpSequence->Tracks[wTrack].dwEvents-i-1].dwTicks>=qwFirst) Inicial = lpSequence->Tracks[wTrack].dwEvents-i-1;
 			if (lpSequence->Tracks[wTrack].Events[i].dwTicks<=qwLast) Final = i;
@@ -865,7 +866,7 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 		Affected++;
 	}
 
-	for (i=Inicial; i<=Final; i++)
+	for (i=Inicial; i<=(SIZE_T) Final; i++)
 	{
 		if ((lpSequence->Tracks[wTrack].Events[i].Event<0x80) || (lpSequence->Tracks[wTrack].Events[i].Event==0xf0))
 			if (lpSequence->Tracks[wTrack].Events[i].DataSize>0)
@@ -875,8 +876,8 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 	HeapFree(GetProcessHeap(), 0, lpSequence->Tracks[wTrack].Events);
 	lpSequence->Tracks[wTrack].Events = lpNew;
 
-	lpSequence->dwEvents = lpSequence->dwEvents - lpSequence->Tracks[wTrack].dwEvents + Affected;
-	lpSequence->Tracks[wTrack].dwEvents = Affected;
+	lpSequence->dwEvents = (DWORD)(lpSequence->dwEvents - lpSequence->Tracks[wTrack].dwEvents + Affected);
+	lpSequence->Tracks[wTrack].dwEvents = (DWORD) Affected;
 
 
 	/* Ajusta o fim de trilha */
@@ -889,7 +890,9 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 	if (!lpSequence->Suspended)
 		AdjustPosition(lpSequence, wTrack);
 
-	return Affected;
+	if (Affected > MAXDWORD)
+		return MAXDWORD;
+	return (DWORD) Affected;
 }
 
 __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, LPBRELS_MIDI_EVENT* lpEvents)
