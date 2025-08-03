@@ -747,7 +747,7 @@ __declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD 
 	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return FALSE;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return 0;
 	if (IsBadCodePtr((FARPROC) lpEvents)) return 0;*/
-	if (wTrack>lpSequence->wTracks) return FALSE;
+	if (wTrack>=lpSequence->wTracks) return FALSE;
 
 	nEvents = lpSequence->Tracks[wTrack].dwEvents + dwEvents;
 	lpNew  = (LPBRELS_MIDI_EVENT) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, nEvents * sizeof(BRELS_MIDI_EVENT));
