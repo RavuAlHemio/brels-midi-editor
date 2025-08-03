@@ -907,6 +907,7 @@ __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTr
 	lpSequence = (LPBRELS_MIDI_SEQUENCE) hSequence;
 	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return 0;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return 0;*/
+	if (wTrack>=lpSequence->wTracks) return 0;
 	if (qwFirst>qwLast) return 0;
 
 	Final=-1;
@@ -975,6 +976,7 @@ __declspec(dllexport) DWORD WINAPI MidiFilterTrackEvents(HANDLE hSequence, WORD 
 	lpSequence = (LPBRELS_MIDI_SEQUENCE) hSequence;
 	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return 0;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return 0;*/
+	if (wTrack>=lpSequence->wTracks) return 0;
 	if (qwFirst > qwLast) return 0;
 
 	Final=-1;
@@ -1268,6 +1270,7 @@ __declspec(dllexport) QWORD WINAPI MidiTrackGet(HANDLE hSequence, WORD wTrack, D
 	lpSequence = (LPBRELS_MIDI_SEQUENCE) hSequence;
 	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return BRELS_ERROR;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return BRELS_ERROR;*/
+	if (wTrack>=lpSequence->wTracks) return BRELS_ERROR;
 
 	switch (dwWhat)
 	{
