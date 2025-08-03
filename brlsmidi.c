@@ -899,7 +899,7 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 
 __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTrack, QWORD qwFirst, QWORD qwLast, DWORD dwFormat, LPBRELS_MIDI_EVENT* lpEvents)
 {
-	int i, Final, Inicial;
+	SSIZE_T i, Final, Inicial;
 	DWORD Affected;
 	LPBRELS_MIDI_SEQUENCE lpSequence;
 	LPBRELS_MIDI_EVENT lpNew;
@@ -918,8 +918,8 @@ __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTr
 	case MIDI_INDEX:
 		if ((qwFirst<lpSequence->Tracks[wTrack].dwEvents) && (qwLast<lpSequence->Tracks[wTrack].dwEvents))
 		{
-			Inicial = (int) qwFirst;
-			Final = (int) qwLast;
+			Inicial = (SSIZE_T) qwFirst;
+			Final = (SSIZE_T) qwLast;
 		}
 		else
 		{
@@ -927,7 +927,7 @@ __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTr
 		}
 		break;
 	case MIDI_TICKS:
-		for (i=0; i<(int) lpSequence->Tracks[wTrack].dwEvents; i++)
+		for (i=0; i<lpSequence->Tracks[wTrack].dwEvents; i++)
 		{
 			if (lpSequence->Tracks[wTrack].Events[lpSequence->Tracks[wTrack].dwEvents-i-1].dwTicks>=qwFirst) Inicial = lpSequence->Tracks[wTrack].dwEvents-i-1;
 			if (lpSequence->Tracks[wTrack].Events[i].dwTicks<=qwLast) Final = i;
@@ -942,7 +942,11 @@ __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTr
 		return 0;
 	}
 
-	Affected = Final - Inicial + 1;
+	if (Final - Inicial + 1 > MAXDWORD)
+	{
+		return 0;
+	}
+	Affected = (DWORD)(Final - Inicial + 1);
 
 	if (lpEvents!=NULL)
 	{
@@ -1134,14 +1138,13 @@ __declspec(dllexport) DWORD WINAPI MidiFilterTrackEvents(HANDLE hSequence, WORD 
 
 __declspec(dllexport) DWORD WINAPI MidiCleanEvents(DWORD dwEvents, LPBRELS_MIDI_EVENT lpEvents)
 {
-	int i;
-	DWORD Affected;
+	DWORD i, Affected;
 
 	/*if (IsBadCodePtr((FARPROC) lpEvents)) return 0;*/
 
 	Affected = 0;
 
-	for (i=0; i<(int) dwEvents; i++)
+	for (i=0; i<dwEvents; i++)
 	{
 		Affected++;
 		if ((lpEvents[i].Event<0x80) || (lpEvents[i].Event==0xF0))
