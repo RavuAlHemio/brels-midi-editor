@@ -744,10 +744,10 @@ __declspec(dllexport) DWORD WINAPI MidiInsertTrackEvents(HANDLE hSequence, WORD 
 	LPBRELS_MIDI_EVENT lpNew;
 
 	lpSequence = (LPBRELS_MIDI_SEQUENCE) hSequence;
-	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return FALSE;
+	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return 0;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return 0;
 	if (IsBadCodePtr((FARPROC) lpEvents)) return 0;*/
-	if (wTrack>=lpSequence->wTracks) return FALSE;
+	if (wTrack>=lpSequence->wTracks) return 0;
 
 	nEvents = lpSequence->Tracks[wTrack].dwEvents + dwEvents;
 	lpNew  = (LPBRELS_MIDI_EVENT) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, nEvents * sizeof(BRELS_MIDI_EVENT));
@@ -808,7 +808,7 @@ __declspec(dllexport) DWORD WINAPI MidiRemoveTrackEvents(HANDLE hSequence, WORD 
 	LPBRELS_MIDI_EVENT lpNew;
 
 	lpSequence = (LPBRELS_MIDI_SEQUENCE) hSequence;
-	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return FALSE;
+	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return 0;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return 0;*/
 	if (qwFirst>qwLast) return 0;
 	if (wTrack>=lpSequence->wTracks) return 0;
@@ -905,7 +905,7 @@ __declspec(dllexport) DWORD WINAPI MidiGetTrackEvents(HANDLE hSequence, WORD wTr
 	LPBRELS_MIDI_EVENT lpNew;
 
 	lpSequence = (LPBRELS_MIDI_SEQUENCE) hSequence;
-	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return FALSE;
+	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return 0;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return 0;*/
 	if (qwFirst>qwLast) return 0;
 
@@ -973,7 +973,7 @@ __declspec(dllexport) DWORD WINAPI MidiFilterTrackEvents(HANDLE hSequence, WORD 
 	BYTE Event;
 
 	lpSequence = (LPBRELS_MIDI_SEQUENCE) hSequence;
-	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return FALSE;
+	if (IsBadReadPtr(hSequence, sizeof(BRELS_MIDI_SEQUENCE))) return 0;
 	/*if (IsBadCodePtr((FARPROC) &lpSequence->Tracks[wTrack])) return 0;*/
 	if (qwFirst > qwLast) return 0;
 
