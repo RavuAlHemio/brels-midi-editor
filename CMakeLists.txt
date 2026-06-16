@@ -15,6 +15,13 @@ target_link_libraries(midiedit
     shlwapi.lib
     winmm.lib)
 
+# use forward slashes in .rc files on non-Windows systems
+if(NOT CMAKE_HOST_WIN32)
+    target_compile_definitions(midiedit
+        PRIVATE $<$<COMPILE_LANGUAGE:RC>:FORWARDSLASHES>
+    )
+endif()
+
 add_library(brlsmidi SHARED
     brlsmidi.c)
 target_link_libraries(brlsmidi
