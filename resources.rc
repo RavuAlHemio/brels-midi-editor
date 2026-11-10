@@ -3,13 +3,6 @@
 	http://readthedocs.org/docs/pvdevtools_doc/latest/devel/IDEs/GNU_minGW/windres/windres.html#id3image-windows-resource-file-example-resfile-rc
 */
 
-#ifdef FORWARDSLASHES
-# define PATHSEP "/"
-#else
-# define PATHSEP "\\"
-#endif
-
-
 1 VERSIONINFO
  FILEVERSION 0,0,8,0
  PRODUCTVERSION 0,0,8,0
@@ -50,4 +43,8 @@ END
 /* From Sindarin in Code::Blocks forums, who had to answer his/her own question. */
 /* http://forums.codeblocks.org/index.php?topic=11128.0 */
 //this will set your .exe icon
-A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "resources" PATHSEP "logo48.ico"
+#ifdef FORWARDSLASHES
+A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "resources/logo48.ico"
+#else
+A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "resources\\logo48.ico"
+#endif
