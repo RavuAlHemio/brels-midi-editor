@@ -20,10 +20,12 @@ jobs:
           arch: ${{ matrix.arch }}
       - name: check out repository code
         uses: actions/checkout@v4
-      - name: make build directory
-        run: mkdir build
-      - name: generate build files
-        run: cd build && cmake -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX="$((Get-Location).Path)\..\install" ..
+      - name: prepare release build
+        run: meson setup bld --prefix "$((Get-Location).Path)\..\install"
+        if: ${{ matrix.build_type == "Release" }}
+      - name: prepare release build
+        run: meson setup bld --prefix "$((Get-Location).Path)\..\install" --debug
+        if: ${{ matrix.build_type == "Debug" }}
       - name: build
         run: cd build && ninja
       - name: collect installation
