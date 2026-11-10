@@ -29,9 +29,9 @@ jobs:
         run: meson setup bld --prefix "$((Get-Location).Path)\..\install" --debug
         if: ${{ matrix.build_type == 'Debug' }}
       - name: build
-        run: cd build && ninja
+        run: cd bld && ninja
       - name: collect installation
-        run: cd build && ninja install
+        run: cd bld && ninja install
       - name: upload installation archive
         uses: actions/upload-artifact@v4
         with:
