@@ -164,7 +164,7 @@ double TickWidth, KeyHeight, Zoom;
 
 char* trim(char* src);
 void KeyText(int Key, LPSTR buffer, SIZE_T bufferLen);
-void LoadText(const char* File, char* Structure, int Items, int Item_Size);
+void LoadText(HMODULE resDll, const char* File, char* Structure, int Items, int Item_Size);
 int NoteVK(WPARAM wParam);
 void GetInstrumentName(int BankHigh, int BankLow, int Program, LPSTR lpBuffer, SIZE_T cbBuffer);
 void GetProgramInformation(int nTrack, int Position, int* Channel, int* BankHigh, int* BankLow, int* Program);
@@ -297,7 +297,7 @@ void KeyText(int Key, LPSTR lpBuffer, SIZE_T cbBuffer)
 	sprintf_s(lpBuffer, cbBuffer, "%02u-%s", Octave, KeyName);
 }
 
-void LoadText(const char* File, char* Structure, int Items, int Item_Size)
+void LoadText(HMODULE resDll, const char* File, char* Structure, int Items, int Item_Size)
 {
 	int i, LastLine, Lines;
 	DWORD dwSize, dwOutput;
@@ -307,12 +307,46 @@ void LoadText(const char* File, char* Structure, int Items, int Item_Size)
 	ZeroMemory(Structure, Items * Item_Size);
 	ZeroMemory(&temp, 65536);
 
-	hFile = CreateFile(File, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
-	if (hFile == INVALID_HANDLE_VALUE) return;
-	dwSize = GetFileSize(hFile, NULL);
-	ReadFile(hFile, &temp, dwSize, &dwOutput, NULL);
-	CloseHandle(hFile);
+	if (resDll != NULL && strlen(File) < 256)
+	{
+		/* try loading as a resource first */
+		/* start by stripping the extension and upcasing the string */
+		char fileDotless[256];
+		char *dot;
+		memcpy(fileDotless, File, strlen(File) + 1);
+		dot = strstr(fileDotless, ".");
+		if (dot != NULL)
+		{
+			*dot = '\0';
+		}
+		CharUpper(fileDotless);
+		HRSRC res = FindResource(resDll, fileDotless, "STRLIST");
+		if (res != NULL)
+		{
+			const char *ptr = LoadResource(resDll, res);
+			if (ptr != NULL)
+			{
+				dwSize = SizeofResource(resDll, res);
+				if (dwSize > sizeof(temp))
+				{
+					dwSize = sizeof(temp);
+				}
+				memcpy(temp, ptr, dwSize);
+			}
+		}
+	}
 
+	if (temp[0] == 0)
+	{
+		/* read from file instead */
+		hFile = CreateFile(File, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) return;
+		dwSize = GetFileSize(hFile, NULL);
+		ReadFile(hFile, &temp, dwSize, &dwOutput, NULL);
+		CloseHandle(hFile);
+	}
+
+	/* split up into lines */
 	LastLine = 0;
 	Lines = 0;
 	for (i=0; i<(int) dwSize; i++)
@@ -3354,9 +3388,41 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 }
 
+static HICON loadIcon(HMODULE resDll, const char *name, int sideLength)
+{
+	if (resDll == NULL)
+	{
+		/* load from file */
+		return (HICON) LoadImage(NULL, name, IMAGE_ICON, sideLength, sideLength, LR_LOADFROMFILE);
+	}
+	else
+	{
+		/* load as resource from resDll */
+		/* strip extension from name and upcase */
+		char dotlessName[256];
+		char *dot;
+		if (strlen(name) >= 256)
+		{
+			abort();
+		}
+		memcpy(dotlessName, name, strlen(name)+1);
+
+		dot = strstr(dotlessName, ".");
+		if (dot != NULL)
+		{
+			*dot = '\0';
+		}
+
+		CharUpper(dotlessName);
+
+		return (HICON) LoadImage(resDll, dotlessName, IMAGE_ICON, sideLength, sideLength, 0);
+	}
+}
+
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,int nCmdShow)
 {
 	int i, cx;
+	HMODULE resDll;
 	HICON Icon, hLogo, hLogo48;
 	TOOLINFO ti;
 	MIDIOUTCAPS moc;
@@ -3377,19 +3443,23 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	for (i=(int) strlen(&path[0])-1; i >= 0; i--) if (path[i]=='\\') break; path[i]=0;
 	SetCurrentDirectory(&path[0]);
 
+	/* Tries to load resources DLL */
+	resDll = LoadLibrary("respkg.dll");
+	/* if this fails, resDll is NULL */
+
 	switch (GetUserDefaultLangID())
 	{
 	default:
-		LoadText("strings.txt", (LPSTR) &Strings, STRINGS, 1024);
-		LoadText("buttons.txt", (LPSTR) &Buttons, 48, 256);
-		LoadText("tips.txt", (LPSTR) &Tips, 53, 256);
-		LoadText("controllers.txt", (LPSTR) &sControllers, 130, 256);
-		LoadText("instruments.txt", (LPSTR) &Instruments, 1408, 256);
+		LoadText(resDll, "strings.txt", (LPSTR) &Strings, STRINGS, 1024);
+		LoadText(resDll, "buttons.txt", (LPSTR) &Buttons, 48, 256);
+		LoadText(resDll, "tips.txt", (LPSTR) &Tips, 53, 256);
+		LoadText(resDll, "controllers.txt", (LPSTR) &sControllers, 130, 256);
+		LoadText(resDll, "instruments.txt", (LPSTR) &Instruments, 1408, 256);
 		break;
 	}
 
-	hLogo = (HICON) LoadImage(NULL, "logo.ico", IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
-	hLogo48 = (HICON) LoadImage(NULL, "logo48.ico", IMAGE_ICON, 48, 48, LR_LOADFROMFILE);
+	hLogo = loadIcon(resDll, "logo.ico", 16);
+	hLogo48 = loadIcon(resDll, "logo48.ico", 48);
 
 	splash = CreateWindow("STATIC", Strings[67], SS_CENTER | SS_CENTERIMAGE | WS_POPUP, GetSystemMetrics(SM_CXSCREEN) / 2 - 200, GetSystemMetrics(SM_CYSCREEN) / 2 - 40, 400, 80, NULL, NULL, hInstance, NULL);
 	CreateWindow("STATIC", Strings[68], SS_CENTER | WS_CHILD | WS_VISIBLE, 0, 50, 400, 20, splash, (HMENU) 1, hInstance, NULL);
@@ -3523,7 +3593,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	{
 		if (i<=ID_DECODE)
 		{
-			Icon = (HICON) LoadImage(NULL, (char*) &Buttons[i], IMAGE_ICON, 16, 16, LR_LOADFROMFILE);
+			Icon = (HICON) loadIcon(resDll, (char*) &Buttons[i], 16);
 			ImageList_AddIcon(imagelist, Icon);
 			SendMessage(GetDlgItem(window, i), BM_SETIMAGE, IMAGE_ICON, (LPARAM) Icon);
 		}

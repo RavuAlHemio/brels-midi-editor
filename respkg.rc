@@ -1,0 +1,91 @@
+#ifdef FORWARDSLASHES
+# define PATHSEP "/"
+#else
+# define PATHSEP "\\"
+#endif
+
+1 VERSIONINFO
+ FILEVERSION 0,0,8,0
+ PRODUCTVERSION 0,0,8,0
+ FILEFLAGSMASK 0x17L
+ FILEOS 0x4L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4" /* 0x0409 0x04E4 = 1252 */ 
+        BEGIN
+            VALUE "CompanyName", "BRELS\0"
+            VALUE "FileDescription", "BRELS MIDI Editor Resource Package\0"
+            VALUE "FileVersion", "0,0,8,0\0"
+            VALUE "InternalName", "midiedit\0"
+            VALUE "LegalCopyright", "Copyright (C) 2003-2011 Breno de Lima Sarmento\r\n\r\nThis program is free software: you can redistribute it and/or modify\r\nit under the terms of the GNU General Public License as published by\r\nthe Free Software Foundation, either version 3 of the License, or\r\n(at your option) any later version.\r\n\r\nThis program is distributed in the hope that it will be useful,\r\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\r\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\r\nGNU General Public License for more details.\r\n\r\nYou should have received a copy of the GNU General Public License\r\nalong with this program.  If not, see <http://www.gnu.org/licenses/>.\0"
+            VALUE "OriginalFilename", "respkg.dll\0"
+            VALUE "ProductName", "BRELS MIDI Editor\0"
+            VALUE "ProductVersion", "0,0,8,0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+BUTTONS STRLIST "resources" PATHSEP "buttons.txt"
+CONTROLLERS STRLIST "resources" PATHSEP "controllers.txt"
+INSTRUMENTS STRLIST "resources" PATHSEP "instruments.txt"
+STRINGS STRLIST "resources" PATHSEP "strings.txt"
+TIPS STRLIST "resources" PATHSEP "tips.txt"
+
+ABRIR ICON "resources" PATHSEP "abrir.ICO"
+
+AJUDA ICON "resources" PATHSEP "ajuda.ICO"
+ANDAMENTO ICON "resources" PATHSEP "andamento.ICO"
+APAGAR ICON "resources" PATHSEP "apagar.ICO"
+API ICON "resources" PATHSEP "api.ICO"
+BREVE ICON "resources" PATHSEP "breve.ICO"
+COLAR ICON "resources" PATHSEP "colar.ICO"
+COLCHEIA ICON "resources" PATHSEP "colcheia.ICO"
+COPIAR ICON "resources" PATHSEP "copiar.ICO"
+COPYRIGHT ICON "resources" PATHSEP "copyright.ICO"
+CORTAR ICON "resources" PATHSEP "cortar.ICO"
+DECODIFICAR ICON "resources" PATHSEP "decodificar.ICO"
+DESCONHECIDO ICON "resources" PATHSEP "desconhecido.ICO"
+FILTRAR ICON "resources" PATHSEP "filtrar.ICO"
+FIM ICON "resources" PATHSEP "fim.ICO"
+FUSA ICON "resources" PATHSEP "fusa.ICO"
+INICIO ICON "resources" PATHSEP "inicio.ICO"
+INSERIRTRILHA ICON "resources" PATHSEP "inserirtrilha.ICO"
+INSTRUMENTO ICON "resources" PATHSEP "instrumento.ICO"
+LETRA ICON "resources" PATHSEP "letra.ICO"
+LOGO ICON "resources" PATHSEP "logo.ico"
+LOGO48 ICON "resources" PATHSEP "logo48.ico"
+LOOP ICON "resources" PATHSEP "loop.ICO"
+MARCADOR ICON "resources" PATHSEP "marcador.ICO"
+MINIMA ICON "resources" PATHSEP "minima.ICO"
+MUDA ICON "resources" PATHSEP "muda.ICO"
+NOMEDATRILHA ICON "resources" PATHSEP "nomedatrilha.ICO"
+NOMEDOINSTRUMENTO ICON "resources" PATHSEP "nomedoinstrumento.ICO"
+NOVO ICON "resources" PATHSEP "novo.ICO"
+NUMERODATRILHA ICON "resources" PATHSEP "numerodatrilha.ICO"
+OITAVA_ABAIXO ICON "resources" PATHSEP "oitava_abaixo.ICO"
+OITAVA_ACIMA ICON "resources" PATHSEP "oitava_acima.ICO"
+PARAR ICON "resources" PATHSEP "parar.ICO"
+PAUSAR ICON "resources" PATHSEP "pausar.ICO"
+PONTODEDICA ICON "resources" PATHSEP "pontodedica.ICO"
+REMOVERTRILHA ICON "resources" PATHSEP "removertrilha.ICO"
+SALVAR ICON "resources" PATHSEP "salvar.ICO"
+SALVARCOMO ICON "resources" PATHSEP "salvarcomo.ICO"
+SELECIONAR ICON "resources" PATHSEP "selecionar.ICO"
+SELECIONARTUDO ICON "resources" PATHSEP "selecionartudo.ICO"
+SEMIBREVE ICON "resources" PATHSEP "semibreve.ICO"
+SEMICOLCHEIA ICON "resources" PATHSEP "semicolcheia.ICO"
+SEMIFUSA ICON "resources" PATHSEP "semifusa.ICO"
+SEMINIMA ICON "resources" PATHSEP "seminima.ICO"
+SOBRE ICON "resources" PATHSEP "sobre.ICO"
+SOLO ICON "resources" PATHSEP "solo.ICO"
+TEXTO ICON "resources" PATHSEP "texto.ICO"
+TOCAR ICON "resources" PATHSEP "tocar.ICO"
+TRANSPOR_ABAIXO ICON "resources" PATHSEP "transpor_abaixo.ICO"
+TRANSPOR_ACIMA ICON "resources" PATHSEP "transpor_acima.ICO"

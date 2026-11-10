@@ -17,6 +17,10 @@ resources_res = windows.compile_resources(
   'resources.rc',
   args: rc_args,
 )
+respkg_res = windows.compile_resources(
+  'respkg.rc',
+  args: rc_args,
+)
 
 executable(
   'midiedit',
@@ -45,6 +49,12 @@ shared_library(
   dependencies: [
     winmm,
   ],
+)
+
+shared_library(
+  'respkg',
+
+  respkg_res,
 )
 
 install_data(
