@@ -23,7 +23,7 @@ jobs:
       - name: prepare release build
         run: meson setup bld --prefix "$((Get-Location).Path)\..\install"
         if: ${{ matrix.build_type == 'Release' }}
-      - name: prepare release build
+      - name: prepare debug build
         run: meson setup bld --prefix "$((Get-Location).Path)\..\install" --debug
         if: ${{ matrix.build_type == 'Debug' }}
       - name: build
