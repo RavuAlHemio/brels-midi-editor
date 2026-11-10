@@ -1,8 +1,10 @@
+#define STR(a) #a
 #ifdef FORWARDSLASHES
-# define PATHSEP "/"
+#define RESPATH(a, b) a/b
 #else
-# define PATHSEP "\\"
+#define RESPATH(a, b) a\x5cb
 #endif
+
 
 1 VERSIONINFO
  FILEVERSION 0,0,8,0
@@ -14,7 +16,7 @@
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904E4" /* 0x0409 0x04E4 = 1252 */ 
+        BLOCK "040904E4" /* 0x0409 0x04E4 = 1252 */
         BEGIN
             VALUE "CompanyName", "BRELS\0"
             VALUE "FileDescription", "BRELS MIDI Editor Resource Package\0"
@@ -32,60 +34,59 @@ BEGIN
     END
 END
 
-BUTTONS STRLIST "resources" PATHSEP "buttons.txt"
-CONTROLLERS STRLIST "resources" PATHSEP "controllers.txt"
-INSTRUMENTS STRLIST "resources" PATHSEP "instruments.txt"
-STRINGS STRLIST "resources" PATHSEP "strings.txt"
-TIPS STRLIST "resources" PATHSEP "tips.txt"
+BUTTONS STRLIST RESPATH(resources, buttons.txt)
+CONTROLLERS STRLIST RESPATH(resources, controllers.txt)
+INSTRUMENTS STRLIST RESPATH(resources, instruments.txt)
+STRINGS STRLIST RESPATH(resources, strings.txt)
+TIPS STRLIST RESPATH(resources, tips.txt)
 
-ABRIR ICON "resources" PATHSEP "abrir.ICO"
-
-AJUDA ICON "resources" PATHSEP "ajuda.ICO"
-ANDAMENTO ICON "resources" PATHSEP "andamento.ICO"
-APAGAR ICON "resources" PATHSEP "apagar.ICO"
-API ICON "resources" PATHSEP "api.ICO"
-BREVE ICON "resources" PATHSEP "breve.ICO"
-COLAR ICON "resources" PATHSEP "colar.ICO"
-COLCHEIA ICON "resources" PATHSEP "colcheia.ICO"
-COPIAR ICON "resources" PATHSEP "copiar.ICO"
-COPYRIGHT ICON "resources" PATHSEP "copyright.ICO"
-CORTAR ICON "resources" PATHSEP "cortar.ICO"
-DECODIFICAR ICON "resources" PATHSEP "decodificar.ICO"
-DESCONHECIDO ICON "resources" PATHSEP "desconhecido.ICO"
-FILTRAR ICON "resources" PATHSEP "filtrar.ICO"
-FIM ICON "resources" PATHSEP "fim.ICO"
-FUSA ICON "resources" PATHSEP "fusa.ICO"
-INICIO ICON "resources" PATHSEP "inicio.ICO"
-INSERIRTRILHA ICON "resources" PATHSEP "inserirtrilha.ICO"
-INSTRUMENTO ICON "resources" PATHSEP "instrumento.ICO"
-LETRA ICON "resources" PATHSEP "letra.ICO"
-LOGO ICON "resources" PATHSEP "logo.ico"
-LOGO48 ICON "resources" PATHSEP "logo48.ico"
-LOOP ICON "resources" PATHSEP "loop.ICO"
-MARCADOR ICON "resources" PATHSEP "marcador.ICO"
-MINIMA ICON "resources" PATHSEP "minima.ICO"
-MUDA ICON "resources" PATHSEP "muda.ICO"
-NOMEDATRILHA ICON "resources" PATHSEP "nomedatrilha.ICO"
-NOMEDOINSTRUMENTO ICON "resources" PATHSEP "nomedoinstrumento.ICO"
-NOVO ICON "resources" PATHSEP "novo.ICO"
-NUMERODATRILHA ICON "resources" PATHSEP "numerodatrilha.ICO"
-OITAVA_ABAIXO ICON "resources" PATHSEP "oitava_abaixo.ICO"
-OITAVA_ACIMA ICON "resources" PATHSEP "oitava_acima.ICO"
-PARAR ICON "resources" PATHSEP "parar.ICO"
-PAUSAR ICON "resources" PATHSEP "pausar.ICO"
-PONTODEDICA ICON "resources" PATHSEP "pontodedica.ICO"
-REMOVERTRILHA ICON "resources" PATHSEP "removertrilha.ICO"
-SALVAR ICON "resources" PATHSEP "salvar.ICO"
-SALVARCOMO ICON "resources" PATHSEP "salvarcomo.ICO"
-SELECIONAR ICON "resources" PATHSEP "selecionar.ICO"
-SELECIONARTUDO ICON "resources" PATHSEP "selecionartudo.ICO"
-SEMIBREVE ICON "resources" PATHSEP "semibreve.ICO"
-SEMICOLCHEIA ICON "resources" PATHSEP "semicolcheia.ICO"
-SEMIFUSA ICON "resources" PATHSEP "semifusa.ICO"
-SEMINIMA ICON "resources" PATHSEP "seminima.ICO"
-SOBRE ICON "resources" PATHSEP "sobre.ICO"
-SOLO ICON "resources" PATHSEP "solo.ICO"
-TEXTO ICON "resources" PATHSEP "texto.ICO"
-TOCAR ICON "resources" PATHSEP "tocar.ICO"
-TRANSPOR_ABAIXO ICON "resources" PATHSEP "transpor_abaixo.ICO"
-TRANSPOR_ACIMA ICON "resources" PATHSEP "transpor_acima.ICO"
+ABRIR ICON RESPATH(resources, abrir.ICO)
+AJUDA ICON RESPATH(resources, ajuda.ICO)
+ANDAMENTO ICON RESPATH(resources, andamento.ICO)
+APAGAR ICON RESPATH(resources, apagar.ICO)
+API ICON RESPATH(resources, api.ICO)
+BREVE ICON RESPATH(resources, breve.ICO)
+COLAR ICON RESPATH(resources, colar.ICO)
+COLCHEIA ICON RESPATH(resources, colcheia.ICO)
+COPIAR ICON RESPATH(resources, copiar.ICO)
+COPYRIGHT ICON RESPATH(resources, copyright.ICO)
+CORTAR ICON RESPATH(resources, cortar.ICO)
+DECODIFICAR ICON RESPATH(resources, decodificar.ICO)
+DESCONHECIDO ICON RESPATH(resources, desconhecido.ICO)
+FILTRAR ICON RESPATH(resources, filtrar.ICO)
+FIM ICON RESPATH(resources, fim.ICO)
+FUSA ICON RESPATH(resources, fusa.ICO)
+INICIO ICON RESPATH(resources, inicio.ICO)
+INSERIRTRILHA ICON RESPATH(resources, inserirtrilha.ICO)
+INSTRUMENTO ICON RESPATH(resources, instrumento.ICO)
+LETRA ICON RESPATH(resources, letra.ICO)
+LOGO ICON RESPATH(resources, logo.ico)
+LOGO48 ICON RESPATH(resources, logo48.ico)
+LOOP ICON RESPATH(resources, loop.ICO)
+MARCADOR ICON RESPATH(resources, marcador.ICO)
+MINIMA ICON RESPATH(resources, minima.ICO)
+MUDA ICON RESPATH(resources, muda.ICO)
+NOMEDATRILHA ICON RESPATH(resources, nomedatrilha.ICO)
+NOMEDOINSTRUMENTO ICON RESPATH(resources, nomedoinstrumento.ICO)
+NOVO ICON RESPATH(resources, novo.ICO)
+NUMERODATRILHA ICON RESPATH(resources, numerodatrilha.ICO)
+OITAVA_ABAIXO ICON RESPATH(resources, oitava_abaixo.ICO)
+OITAVA_ACIMA ICON RESPATH(resources, oitava_acima.ICO)
+PARAR ICON RESPATH(resources, parar.ICO)
+PAUSAR ICON RESPATH(resources, pausar.ICO)
+PONTODEDICA ICON RESPATH(resources, pontodedica.ICO)
+REMOVERTRILHA ICON RESPATH(resources, removertrilha.ICO)
+SALVAR ICON RESPATH(resources, salvar.ICO)
+SALVARCOMO ICON RESPATH(resources, salvarcomo.ICO)
+SELECIONAR ICON RESPATH(resources, selecionar.ICO)
+SELECIONARTUDO ICON RESPATH(resources, selecionartudo.ICO)
+SEMIBREVE ICON RESPATH(resources, semibreve.ICO)
+SEMICOLCHEIA ICON RESPATH(resources, semicolcheia.ICO)
+SEMIFUSA ICON RESPATH(resources, semifusa.ICO)
+SEMINIMA ICON RESPATH(resources, seminima.ICO)
+SOBRE ICON RESPATH(resources, sobre.ICO)
+SOLO ICON RESPATH(resources, solo.ICO)
+TEXTO ICON RESPATH(resources, texto.ICO)
+TOCAR ICON RESPATH(resources, tocar.ICO)
+TRANSPOR_ABAIXO ICON RESPATH(resources, transpor_abaixo.ICO)
+TRANSPOR_ACIMA ICON RESPATH(resources, transpor_acima.ICO)
