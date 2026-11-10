@@ -18,6 +18,8 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: ${{ matrix.arch }}
+      - name: install meson
+        run: python -m pip install meson
       - name: check out repository code
         uses: actions/checkout@v4
       - name: prepare release build
